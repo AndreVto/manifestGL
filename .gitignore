@@ -1,0 +1,14 @@
+/build/
+/build-*/
+*.o
+*.so
+*.so.*
+CMakeUserPresets.json
+*:Zone.Identifier
+.DS_Store
+.env
+.env.*
+!.env.example
+*.log
+.vscode/
+.idea/
