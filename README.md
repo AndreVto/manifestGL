@@ -13,6 +13,7 @@ The libraries share context and presentation operations through `mgl_runtime_ser
 ## Build and test
 
 ```sh
+python3 tools/generate_gles_trace.py
 cmake -S . -B build-host -DMGL_BUILD_TESTS=ON
 cmake --build build-host -j
 ctest --test-dir build-host --output-on-failure

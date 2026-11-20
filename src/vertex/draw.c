@@ -885,13 +885,9 @@ static void realize_inputs(struct mgl_context *ctx, struct mgl_realized_input *i
 
     if (storage_size != 0u || desired_mask != 0u) {
         mgl_native_dispatch_bind_buffer(ctx, GL_ARRAY_BUFFER, ctx->scratch_array_buffer_native);
-        mgl_render_diag_native_check(ctx, "draw_staged_array_bind",
-                                     ctx->scratch_array_buffer_native, storage_size);
         if (storage_size != 0u) {
             ctx->native_dispatch->glesBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)storage_size, storage,
                                                  GL_STREAM_DRAW);
-            mgl_render_diag_native_check(ctx, "draw_staged_array_upload",
-                                         ctx->scratch_array_buffer_native, storage_size);
         }
     }
 
@@ -936,7 +932,6 @@ static void realize_inputs(struct mgl_context *ctx, struct mgl_realized_input *i
                 ++constant_skips;
         }
     }
-    mgl_render_diag_native_check(ctx, "draw_staged_attributes", desired_mask, storage_size);
     mgl_perf_diag_attrib(ctx, pointer_sets, pointer_skips, constant_sets, constant_skips,
                          divisor_sets, divisor_skips);
 }
@@ -1113,8 +1108,6 @@ static void realize_native_inputs(struct mgl_context *ctx, struct mgl_realized_i
                          divisor_sets, divisor_skips);
     if (array_bound != interface_array_bound)
         mgl_native_dispatch_bind_buffer(ctx, GL_ARRAY_BUFFER, interface_array_bound);
-    mgl_render_diag_native_check(ctx, "draw_native_attributes", desired_mask,
-                                 interface_array_bound);
 }
 
 static void restore_array_buffer_binding(struct mgl_context *ctx) {
@@ -1343,14 +1336,10 @@ static int prepare_common(struct mgl_context *ctx, struct mgl_program **out_prog
             mgl_draw_use_native_program(ctx, program->native_name);
         }
     }
-    mgl_render_diag_native_check(ctx, "draw_program_bind", program->native_name,
-                                 ctx->current_program);
 
     mgl_texture_realize_bindings(ctx);
     if (program == &ctx->fixed_program)
         mgl_texture_realize_fixed_bindings(ctx);
-    mgl_render_diag_native_check(ctx, "draw_texture_bindings", program->native_name,
-                                 ctx->compat.active_texture);
     if (ctx->native_max_vertex_attribs <= 0 && ctx->native_dispatch->glesGetIntegerv != NULL) {
         GLint max_attribs = 0;
         ctx->native_dispatch->glesGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &max_attribs);
@@ -1366,7 +1355,6 @@ static int prepare_common(struct mgl_context *ctx, struct mgl_program **out_prog
     }
     if (!validate_input_realization(ctx, inputs, count))
         return 0;
-    mgl_render_diag_native_check(ctx, "draw_prepare_complete", program->native_name, count);
     *out_program = program;
     *out_input_count = count;
     return 1;
@@ -1419,11 +1407,6 @@ void mgl_draw_transform_feedback_native(struct mgl_context *ctx, GLenum mode, GL
 
 void glDrawArrays(GLenum mode, GLint first, GLsizei count) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glDrawArrays",
-                        (const struct mgl_error_arg[]){{"mode", (uint64_t)(uintptr_t)mode},
-                                                       {"first", (uint64_t)(uintptr_t)first},
-                                                       {"count", (uint64_t)(uintptr_t)count}},
-                        3u);
     struct mgl_program *program = NULL;
     struct mgl_realized_input inputs[MGL_MAX_VERTEX_ATTRIBS + MGL_COMPAT_SEMANTIC_COUNT];
     size_t input_count = 0u;
@@ -1491,7 +1474,6 @@ void glDrawArrays(GLenum mode, GLint first, GLsizei count) {
 
     perf_started = mgl_perf_diag_now();
     (void)pthread_mutex_lock(&ctx->share_group->lock);
-    mgl_render_diag_native_check(ctx, "draw_entry", (uint64_t)mode, (uint64_t)count);
     uint64_t prepare_sequence = ctx->errors.sequence;
     if (!prepare_common(ctx, &program, inputs, &input_count)) {
         (void)pthread_mutex_unlock(&ctx->share_group->lock);
@@ -1504,11 +1486,8 @@ void glDrawArrays(GLenum mode, GLint first, GLsizei count) {
         realize_native_inputs(ctx, inputs, input_count);
         mgl_compat_realize_program_uniforms(ctx, program);
         mgl_arb_realize_uniforms(ctx, program);
-        mgl_render_diag_native_check(ctx, "draw_uniforms", program->native_name, input_count);
         {
             MGL_DEEP_SCOPE(ctx, MGL_DEEP_GLES_DRAW);
-            mgl_render_diag_native_check(ctx, "before_glesDrawArrays", (uint64_t)mode,
-                                         (uint64_t)count);
             {
                 int route = mgl_framebuffer_draw_route_begin(ctx);
                 if (route >= 0) {
@@ -1518,7 +1497,6 @@ void glDrawArrays(GLenum mode, GLint first, GLsizei count) {
                 if (route > 0)
                     mgl_framebuffer_draw_route_end(ctx);
             }
-            mgl_render_diag_native_check(ctx, "glesDrawArrays", (uint64_t)mode, (uint64_t)count);
         }
         (void)pthread_mutex_unlock(&ctx->share_group->lock);
         mgl_perf_diag_draw(ctx, 0, perf_started, 0u);
@@ -1538,10 +1516,8 @@ void glDrawArrays(GLenum mode, GLint first, GLsizei count) {
     realize_inputs(ctx, inputs, input_count, storage, storage_size);
     mgl_compat_realize_program_uniforms(ctx, program);
     mgl_arb_realize_uniforms(ctx, program);
-    mgl_render_diag_native_check(ctx, "draw_uniforms", program->native_name, input_count);
     {
         MGL_DEEP_SCOPE(ctx, MGL_DEEP_GLES_DRAW);
-        mgl_render_diag_native_check(ctx, "before_glesDrawArrays", (uint64_t)mode, (uint64_t)count);
         {
             int route = mgl_framebuffer_draw_route_begin(ctx);
             if (route >= 0) {
@@ -1551,7 +1527,6 @@ void glDrawArrays(GLenum mode, GLint first, GLsizei count) {
             if (route > 0)
                 mgl_framebuffer_draw_route_end(ctx);
         }
-        mgl_render_diag_native_check(ctx, "glesDrawArrays", (uint64_t)mode, (uint64_t)count);
     }
     restore_array_buffer_binding(ctx);
     release_packed_storage(ctx, storage, storage_borrowed);
@@ -1707,12 +1682,6 @@ static void *pack_rebased_indices(const uint32_t *indices, GLsizei count, uint32
 
 void glDrawElements(GLenum mode, GLsizei count, GLenum type, const void *indices) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glDrawElements",
-                        (const struct mgl_error_arg[]){{"mode", (uint64_t)(uintptr_t)mode},
-                                                       {"count", (uint64_t)(uintptr_t)count},
-                                                       {"type", (uint64_t)(uintptr_t)type},
-                                                       {"indices", (uint64_t)(uintptr_t)indices}},
-                        4u);
     struct mgl_program *program = NULL;
     struct mgl_realized_input inputs[MGL_MAX_VERTEX_ATTRIBS + MGL_COMPAT_SEMANTIC_COUNT];
     size_t input_count = 0u;
@@ -1826,7 +1795,6 @@ void glDrawElements(GLenum mode, GLsizei count, GLenum type, const void *indices
         (void)pthread_mutex_lock(&ctx->share_group->lock);
         mgl_deep_record(ctx, MGL_DEEP_DRAW_ELEMENTS_LOCK_WAIT, lock_started);
     }
-    mgl_render_diag_native_check(ctx, "draw_entry", (uint64_t)mode, (uint64_t)count);
     uint64_t prepare_sequence = ctx->errors.sequence;
     if (!prepare_common(ctx, &program, inputs, &input_count)) {
         (void)pthread_mutex_unlock(&ctx->share_group->lock);
@@ -1849,8 +1817,6 @@ void glDrawElements(GLenum mode, GLsizei count, GLenum type, const void *indices
             mgl_arb_realize_uniforms(ctx, program);
             {
                 MGL_DEEP_SCOPE(ctx, MGL_DEEP_GLES_DRAW);
-                mgl_render_diag_native_check(ctx, "before_glesDrawElements", (uint64_t)mode,
-                                             (uint64_t)count);
                 {
                     int route = mgl_framebuffer_draw_route_begin(ctx);
                     if (route >= 0) {
@@ -1860,8 +1826,6 @@ void glDrawElements(GLenum mode, GLsizei count, GLenum type, const void *indices
                     if (route > 0)
                         mgl_framebuffer_draw_route_end(ctx);
                 }
-                mgl_render_diag_native_check(ctx, "glesDrawElements", (uint64_t)mode,
-                                             (uint64_t)count);
             }
             (void)pthread_mutex_unlock(&ctx->share_group->lock);
             mgl_perf_diag_draw(ctx, 0, perf_started, 0u);
@@ -1885,21 +1849,15 @@ void glDrawElements(GLenum mode, GLsizei count, GLenum type, const void *indices
         } else {
             mgl_native_dispatch_bind_buffer(ctx, GL_ELEMENT_ARRAY_BUFFER,
                                             ctx->scratch_element_buffer_native);
-            mgl_render_diag_native_check(ctx, "draw_index_bind", ctx->scratch_element_buffer_native,
-                                         index_bytes);
             {
                 uint64_t upload_started = mgl_perf_diag_now();
                 ctx->native_dispatch->glesBufferData(
                     GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)index_bytes, indices, GL_STREAM_DRAW);
-                mgl_render_diag_native_check(ctx, "draw_index_upload",
-                                             ctx->scratch_element_buffer_native, index_bytes);
                 mgl_deep_record(ctx, MGL_DEEP_GLES_INDEX_UPLOAD, upload_started);
             }
         }
         {
             MGL_DEEP_SCOPE(ctx, MGL_DEEP_GLES_DRAW);
-            mgl_render_diag_native_check(ctx, "before_glesDrawElements", (uint64_t)mode,
-                                         (uint64_t)count);
             {
                 int route = mgl_framebuffer_draw_route_begin(ctx);
                 if (route >= 0) {
@@ -1910,7 +1868,6 @@ void glDrawElements(GLenum mode, GLsizei count, GLenum type, const void *indices
                 if (route > 0)
                     mgl_framebuffer_draw_route_end(ctx);
             }
-            mgl_render_diag_native_check(ctx, "glesDrawElements", (uint64_t)mode, (uint64_t)count);
         }
         mgl_native_dispatch_bind_buffer(ctx, GL_ELEMENT_ARRAY_BUFFER, 0u);
         (void)pthread_mutex_unlock(&ctx->share_group->lock);
@@ -1955,23 +1912,16 @@ void glDrawElements(GLenum mode, GLsizei count, GLenum type, const void *indices
     realize_inputs(ctx, inputs, input_count, vertex_storage, vertex_storage_size);
     mgl_compat_realize_program_uniforms(ctx, program);
     mgl_arb_realize_uniforms(ctx, program);
-    mgl_render_diag_native_check(ctx, "draw_uniforms", program->native_name, input_count);
     mgl_native_dispatch_bind_buffer(ctx, GL_ELEMENT_ARRAY_BUFFER,
                                     ctx->scratch_element_buffer_native);
-    mgl_render_diag_native_check(ctx, "draw_index_bind", ctx->scratch_element_buffer_native,
-                                 native_index_size);
     {
         uint64_t upload_started = mgl_perf_diag_now();
         ctx->native_dispatch->glesBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)native_index_size,
                                              native_indices, GL_STREAM_DRAW);
-        mgl_render_diag_native_check(ctx, "draw_index_upload", ctx->scratch_element_buffer_native,
-                                     native_index_size);
         mgl_deep_record(ctx, MGL_DEEP_GLES_INDEX_UPLOAD, upload_started);
     }
     {
         MGL_DEEP_SCOPE(ctx, MGL_DEEP_GLES_DRAW);
-        mgl_render_diag_native_check(ctx, "before_glesDrawElements", (uint64_t)mode,
-                                     (uint64_t)count);
         {
             int route = mgl_framebuffer_draw_route_begin(ctx);
             if (route >= 0) {
@@ -1982,7 +1932,6 @@ void glDrawElements(GLenum mode, GLsizei count, GLenum type, const void *indices
             if (route > 0)
                 mgl_framebuffer_draw_route_end(ctx);
         }
-        mgl_render_diag_native_check(ctx, "glesDrawElements", (uint64_t)mode, (uint64_t)count);
     }
     restore_buffer_bindings(ctx);
 
@@ -1996,14 +1945,6 @@ void glDrawElements(GLenum mode, GLsizei count, GLenum type, const void *indices
 void glDrawRangeElements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type,
                          const void *indices) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glDrawRangeElements",
-                        (const struct mgl_error_arg[]){{"mode", (uint64_t)(uintptr_t)mode},
-                                                       {"start", (uint64_t)(uintptr_t)start},
-                                                       {"end", (uint64_t)(uintptr_t)end},
-                                                       {"count", (uint64_t)(uintptr_t)count},
-                                                       {"type", (uint64_t)(uintptr_t)type},
-                                                       {"indices", (uint64_t)(uintptr_t)indices}},
-                        6u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -2027,13 +1968,6 @@ void glDrawRangeElements(GLenum mode, GLuint start, GLuint end, GLsizei count, G
 
 void glMultiDrawArrays(GLenum mode, const GLint *first, const GLsizei *count, GLsizei drawcount) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glMultiDrawArrays",
-        (const struct mgl_error_arg[]){{"mode", (uint64_t)(uintptr_t)mode},
-                                       {"first", (uint64_t)(uintptr_t)first},
-                                       {"count", (uint64_t)(uintptr_t)count},
-                                       {"drawcount", (uint64_t)(uintptr_t)drawcount}},
-        4u);
     GLsizei i;
     if (ctx == NULL)
         return;
@@ -2073,14 +2007,6 @@ void glMultiDrawArrays(GLenum mode, const GLint *first, const GLsizei *count, GL
 void glMultiDrawElements(GLenum mode, const GLsizei *count, GLenum type, const void *const *indices,
                          GLsizei drawcount) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glMultiDrawElements",
-        (const struct mgl_error_arg[]){{"mode", (uint64_t)(uintptr_t)mode},
-                                       {"count", (uint64_t)(uintptr_t)count},
-                                       {"type", (uint64_t)(uintptr_t)type},
-                                       {"indices", (uint64_t)(uintptr_t)indices},
-                                       {"drawcount", (uint64_t)(uintptr_t)drawcount}},
-        5u);
     GLsizei i;
     if (ctx == NULL)
         return;
@@ -2192,14 +2118,6 @@ static int native_basevertex_draw(struct mgl_context *ctx, GLenum mode, GLsizei 
 void glDrawElementsBaseVertex(GLenum mode, GLsizei count, GLenum type, const void *indices,
                               GLint basevertex) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glDrawElementsBaseVertex",
-        (const struct mgl_error_arg[]){{"mode", (uint64_t)(uintptr_t)mode},
-                                       {"count", (uint64_t)(uintptr_t)count},
-                                       {"type", (uint64_t)(uintptr_t)type},
-                                       {"indices", (uint64_t)(uintptr_t)indices},
-                                       {"basevertex", (uint64_t)(uintptr_t)basevertex}},
-        5u);
     uint32_t *adjusted = NULL;
     GLuint saved_element;
     if (ctx == NULL)
@@ -2445,11 +2363,8 @@ static void draw_elements_instanced_base_instance(GLenum mode, GLsizei count, GL
     realize_inputs(ctx, inputs, input_count, vertex_storage, vertex_storage_size);
     mgl_compat_realize_program_uniforms(ctx, program);
     mgl_arb_realize_uniforms(ctx, program);
-    mgl_render_diag_native_check(ctx, "draw_uniforms", program->native_name, input_count);
     mgl_native_dispatch_bind_buffer(ctx, GL_ELEMENT_ARRAY_BUFFER,
                                     ctx->scratch_element_buffer_native);
-    mgl_render_diag_native_check(ctx, "draw_index_bind", ctx->scratch_element_buffer_native,
-                                 native_index_size);
     ctx->native_dispatch->glesBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)native_index_size,
                                          native_indices, GL_STREAM_DRAW);
     {
@@ -2626,10 +2541,6 @@ static int native_indirect_draw(struct mgl_context *ctx, GLenum mode, GLenum typ
 
 void glDrawArraysIndirect(GLenum mode, const void *indirect) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glDrawArraysIndirect",
-                        (const struct mgl_error_arg[]){{"mode", (uint64_t)(uintptr_t)mode},
-                                                       {"indirect", (uint64_t)(uintptr_t)indirect}},
-                        2u);
     struct mgl_draw_arrays_indirect_command command;
     if (ctx == NULL)
         return;
@@ -2658,11 +2569,6 @@ void glDrawArraysIndirect(GLenum mode, const void *indirect) {
 
 void glDrawElementsIndirect(GLenum mode, GLenum type, const void *indirect) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glDrawElementsIndirect",
-                        (const struct mgl_error_arg[]){{"mode", (uint64_t)(uintptr_t)mode},
-                                                       {"type", (uint64_t)(uintptr_t)type},
-                                                       {"indirect", (uint64_t)(uintptr_t)indirect}},
-                        3u);
     struct mgl_draw_elements_indirect_command command;
     size_t index_size;
     size_t byte_offset;

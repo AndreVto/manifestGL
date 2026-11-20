@@ -2320,10 +2320,6 @@ void glBindTexture(GLenum target, GLuint texture) {
     struct mgl_context *ctx = mgl_context_current();
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_TEXTURE_STATE);
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_BIND_TEXTURE);
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glBindTexture",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"texture", (uint64_t)(uintptr_t)texture}},
-                        2u);
     struct mgl_texture *obj = NULL;
     GLuint native_name = 0u;
     if (ctx == NULL)
@@ -2516,12 +2512,6 @@ static int texture_buffer_attach(struct mgl_context *ctx, struct mgl_texture *te
 
 void glTexBuffer(GLenum target, GLenum internalformat, GLuint buffer) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glTexBuffer",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"buffer", (uint64_t)(uintptr_t)buffer}},
-        3u);
     struct mgl_texture *texture;
     if (ctx == NULL)
         return;
@@ -2545,14 +2535,6 @@ void glTexBuffer(GLenum target, GLenum internalformat, GLuint buffer) {
 void glTexBufferRange(GLenum target, GLenum internalformat, GLuint buffer, GLintptr offset,
                       GLsizeiptr size) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glTexBufferRange",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"buffer", (uint64_t)(uintptr_t)buffer},
-                                       {"offset", (uint64_t)(uintptr_t)offset},
-                                       {"size", (uint64_t)(uintptr_t)size}},
-        5u);
     struct mgl_texture *texture;
     if (ctx == NULL)
         return;
@@ -2595,13 +2577,6 @@ void glTextureBuffer(GLuint texture, GLenum internalformat, GLuint buffer) {
 
 void glTextureBufferEXT(GLuint texture, GLenum target, GLenum internalformat, GLuint buffer) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glTextureBufferEXT",
-        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                       {"target", (uint64_t)(uintptr_t)target},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"buffer", (uint64_t)(uintptr_t)buffer}},
-        4u);
     struct mgl_texture *obj;
     if (ctx == NULL)
         return;
@@ -2661,15 +2636,6 @@ void glTextureBufferRange(GLuint texture, GLenum internalformat, GLuint buffer, 
 void glTextureBufferRangeEXT(GLuint texture, GLenum target, GLenum internalformat, GLuint buffer,
                              GLintptr offset, GLsizeiptr size) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glTextureBufferRangeEXT",
-        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                       {"target", (uint64_t)(uintptr_t)target},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"buffer", (uint64_t)(uintptr_t)buffer},
-                                       {"offset", (uint64_t)(uintptr_t)offset},
-                                       {"size", (uint64_t)(uintptr_t)size}},
-        6u);
     struct mgl_texture *obj;
     if (ctx == NULL)
         return;
@@ -2805,10 +2771,6 @@ void glPrioritizeTextures(GLsizei n, const GLuint *textures, const GLfloat *prio
 
 void glPixelStorei(GLenum pname, GLint param) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glPixelStorei",
-                        (const struct mgl_error_arg[]){{"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"param", (uint64_t)(uintptr_t)param}},
-                        2u);
     GLint *slot = NULL;
     int alignment = 0;
     if (ctx == NULL)
@@ -3835,17 +3797,6 @@ int mgl_texture_apply_sub_image_2d_tight(struct mgl_context *ctx, GLenum target,
 void glTexImage1D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLint border,
                   GLenum format, GLenum type, const void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glTexImage1D",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"border", (uint64_t)(uintptr_t)border},
-                                       {"format", (uint64_t)(uintptr_t)format},
-                                       {"type", (uint64_t)(uintptr_t)type},
-                                       {"pixels", (uint64_t)(uintptr_t)pixels}},
-        8u);
     size_t pixel_bytes = 0u, size = 0u;
     unsigned char *data;
     if (ctx == NULL)
@@ -3928,15 +3879,6 @@ void glTexImage1D(GLenum target, GLint level, GLint internalformat, GLsizei widt
 void glTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLsizei width, GLenum format,
                      GLenum type, const void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTexSubImage1D",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"width", (uint64_t)(uintptr_t)width},
-                                                       {"format", (uint64_t)(uintptr_t)format},
-                                                       {"type", (uint64_t)(uintptr_t)type},
-                                                       {"pixels", (uint64_t)(uintptr_t)pixels}},
-                        7u);
     size_t pixel_bytes = 0u, size = 0u;
     unsigned char *data;
     if (ctx == NULL)
@@ -3997,17 +3939,6 @@ void glTexImage2D(GLenum target, GLint level, GLint internalformat, GLsizei widt
                   GLint border, GLenum format, GLenum type, const void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_TEX_IMAGE_2D);
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glTexImage2D",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height},
-                                       {"border", (uint64_t)(uintptr_t)border},
-                                       {"format", (uint64_t)(uintptr_t)format},
-                                       {"type", (uint64_t)(uintptr_t)type}},
-        8u);
     size_t components = 0u, data_size = 0u;
     unsigned char *data;
     int suppress;
@@ -4397,16 +4328,6 @@ void glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, G
                      GLsizei height, GLenum format, GLenum type, const void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_TEX_SUB_IMAGE_2D);
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTexSubImage2D",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                                       {"width", (uint64_t)(uintptr_t)width},
-                                                       {"height", (uint64_t)(uintptr_t)height},
-                                                       {"format", (uint64_t)(uintptr_t)format},
-                                                       {"type", (uint64_t)(uintptr_t)type}},
-                        8u);
     size_t components = 0u, data_size = 0u;
     unsigned char *data;
     int suppress;
@@ -4961,17 +4882,6 @@ int mgl_texture_apply_sub_image_3d_tight(struct mgl_context *ctx, GLenum target,
 void glTexImage3D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height,
                   GLsizei depth, GLint border, GLenum format, GLenum type, const void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glTexImage3D",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height},
-                                       {"depth", (uint64_t)(uintptr_t)depth},
-                                       {"border", (uint64_t)(uintptr_t)border},
-                                       {"format", (uint64_t)(uintptr_t)format}},
-        8u);
     size_t components = 0u, data_size = 0u;
     unsigned char *data;
     int suppress;
@@ -5051,13 +4961,6 @@ void glTexImage3D(GLenum target, GLint level, GLint internalformat, GLsizei widt
 
 void glTexStorage1D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glTexStorage1D",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"levels", (uint64_t)(uintptr_t)levels},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width}},
-        4u);
     struct mgl_texture *obj;
     if (ctx == NULL)
         return;
@@ -5080,17 +4983,6 @@ void glTexStorage1D(GLenum target, GLsizei levels, GLenum internalformat, GLsize
 void glTextureView(GLuint texture, GLenum target, GLuint origtexture, GLenum internalformat,
                    GLuint minlevel, GLuint numlevels, GLuint minlayer, GLuint numlayers) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glTextureView",
-        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                       {"target", (uint64_t)(uintptr_t)target},
-                                       {"origtexture", (uint64_t)(uintptr_t)origtexture},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"minlevel", (uint64_t)(uintptr_t)minlevel},
-                                       {"numlevels", (uint64_t)(uintptr_t)numlevels},
-                                       {"minlayer", (uint64_t)(uintptr_t)minlayer},
-                                       {"numlayers", (uint64_t)(uintptr_t)numlayers}},
-        8u);
     struct mgl_texture *view, *source, *root;
     struct mgl_texture_level *reference;
     GLuint source_level, source_layer, available_layers, available_levels, level, face;
@@ -5279,14 +5171,6 @@ void glTextureView(GLuint texture, GLenum target, GLuint origtexture, GLenum int
 void glTexStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width,
                     GLsizei height) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glTexStorage2D",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"levels", (uint64_t)(uintptr_t)levels},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height}},
-        5u);
     struct mgl_texture *obj;
     if (ctx == NULL)
         return;
@@ -5309,15 +5193,6 @@ void glTexStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsize
 void glTexStorage3D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width,
                     GLsizei height, GLsizei depth) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glTexStorage3D",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"levels", (uint64_t)(uintptr_t)levels},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height},
-                                       {"depth", (uint64_t)(uintptr_t)depth}},
-        6u);
     struct mgl_texture *obj;
     if (ctx == NULL)
         return;
@@ -5409,16 +5284,6 @@ void glTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, G
                      GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type,
                      const void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTexSubImage3D",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                                       {"zoffset", (uint64_t)(uintptr_t)zoffset},
-                                                       {"width", (uint64_t)(uintptr_t)width},
-                                                       {"height", (uint64_t)(uintptr_t)height},
-                                                       {"depth", (uint64_t)(uintptr_t)depth}},
-                        8u);
     size_t components = 0u, data_size = 0u;
     unsigned char *data;
     int suppress;
@@ -6523,16 +6388,13 @@ static int mgl_texture_apply_compressed_sub_image_3d(struct mgl_context *ctx, GL
 void glCompressedTexImage1D(GLenum target, GLint level, GLenum internalformat, GLsizei width,
                             GLint border, GLsizei imageSize, const void *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glCompressedTexImage1D",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"border", (uint64_t)(uintptr_t)border},
-                                       {"imageSize", (uint64_t)(uintptr_t)imageSize},
-                                       {"data", (uint64_t)(uintptr_t)data}},
-        7u);
+    (void)target;
+    (void)level;
+    (void)internalformat;
+    (void)width;
+    (void)border;
+    (void)imageSize;
+    (void)data;
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -6545,16 +6407,13 @@ void glCompressedTexImage1D(GLenum target, GLint level, GLenum internalformat, G
 void glCompressedTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLsizei width,
                                GLenum format, GLsizei imageSize, const void *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glCompressedTexSubImage1D",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"format", (uint64_t)(uintptr_t)format},
-                                       {"imageSize", (uint64_t)(uintptr_t)imageSize},
-                                       {"data", (uint64_t)(uintptr_t)data}},
-        7u);
+    (void)target;
+    (void)level;
+    (void)xoffset;
+    (void)width;
+    (void)format;
+    (void)imageSize;
+    (void)data;
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -6567,17 +6426,6 @@ void glCompressedTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLsize
 void glCompressedTexImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width,
                             GLsizei height, GLint border, GLsizei imageSize, const void *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glCompressedTexImage2D",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height},
-                                       {"border", (uint64_t)(uintptr_t)border},
-                                       {"imageSize", (uint64_t)(uintptr_t)imageSize},
-                                       {"data", (uint64_t)(uintptr_t)data}},
-        8u);
     const unsigned char *owned;
     unsigned char *staged = NULL;
     size_t expected = 0u;
@@ -6626,17 +6474,6 @@ void glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
                                GLsizei width, GLsizei height, GLenum format, GLsizei imageSize,
                                const void *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glCompressedTexSubImage2D",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height},
-                                       {"format", (uint64_t)(uintptr_t)format},
-                                       {"imageSize", (uint64_t)(uintptr_t)imageSize}},
-        8u);
     const unsigned char *owned;
     unsigned char *staged = NULL;
     size_t expected = 0u;
@@ -6682,17 +6519,6 @@ void glCompressedTexImage3D(GLenum target, GLint level, GLenum internalformat, G
                             GLsizei height, GLsizei depth, GLint border, GLsizei imageSize,
                             const void *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glCompressedTexImage3D",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height},
-                                       {"depth", (uint64_t)(uintptr_t)depth},
-                                       {"border", (uint64_t)(uintptr_t)border},
-                                       {"imageSize", (uint64_t)(uintptr_t)imageSize}},
-        8u);
     const unsigned char *owned;
     unsigned char *staged = NULL;
     size_t expected = 0u;
@@ -6745,16 +6571,6 @@ void glCompressedTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint 
                                GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                GLenum format, GLsizei imageSize, const void *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glCompressedTexSubImage3D",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                                       {"zoffset", (uint64_t)(uintptr_t)zoffset},
-                                                       {"width", (uint64_t)(uintptr_t)width},
-                                                       {"height", (uint64_t)(uintptr_t)height},
-                                                       {"depth", (uint64_t)(uintptr_t)depth}},
-                        8u);
     const unsigned char *owned;
     unsigned char *staged = NULL;
     size_t expected = 0u;
@@ -6803,17 +6619,6 @@ void glCompressedTextureSubImage2D(GLuint texture, GLint level, GLint xoffset, G
                                    GLsizei width, GLsizei height, GLenum format, GLsizei imageSize,
                                    const void *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glCompressedTextureSubImage2D",
-        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height},
-                                       {"format", (uint64_t)(uintptr_t)format},
-                                       {"imageSize", (uint64_t)(uintptr_t)imageSize}},
-        8u);
     struct mgl_texture *obj;
     const unsigned char *owned;
     unsigned char *staged = NULL;
@@ -6859,16 +6664,6 @@ void glCompressedTextureSubImage3D(GLuint texture, GLint level, GLint xoffset, G
                                    GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                    GLenum format, GLsizei imageSize, const void *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glCompressedTextureSubImage3D",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                                       {"zoffset", (uint64_t)(uintptr_t)zoffset},
-                                                       {"width", (uint64_t)(uintptr_t)width},
-                                                       {"height", (uint64_t)(uintptr_t)height},
-                                                       {"depth", (uint64_t)(uintptr_t)depth}},
-                        8u);
     struct mgl_texture *obj;
     const unsigned char *owned;
     unsigned char *staged = NULL;
@@ -7454,17 +7249,6 @@ void glCopyTexImage2D(GLenum target, GLint level, GLenum internalformat, GLint x
                       GLsizei width, GLsizei height, GLint border) {
     struct mgl_context *ctx = mgl_context_current();
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_API_COPY);
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glCopyTexImage2D",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"x", (uint64_t)(uintptr_t)x},
-                                       {"y", (uint64_t)(uintptr_t)y},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height},
-                                       {"border", (uint64_t)(uintptr_t)border}},
-        8u);
     int suppress;
     if (ctx == NULL)
         return;
@@ -7592,16 +7376,6 @@ void glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffse
                          GLsizei width, GLsizei height) {
     struct mgl_context *ctx = mgl_context_current();
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_API_COPY);
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glCopyTexSubImage2D",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                                       {"x", (uint64_t)(uintptr_t)x},
-                                                       {"y", (uint64_t)(uintptr_t)y},
-                                                       {"width", (uint64_t)(uintptr_t)width},
-                                                       {"height", (uint64_t)(uintptr_t)height}},
-                        8u);
     int suppress;
     if (ctx == NULL)
         return;
@@ -7703,16 +7477,6 @@ static void copy_tex_sub_image_3d_apply(struct mgl_context *ctx, GLenum target, 
 void glCopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset,
                          GLint x, GLint y, GLsizei width, GLsizei height) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glCopyTexSubImage3D",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                                       {"zoffset", (uint64_t)(uintptr_t)zoffset},
-                                                       {"x", (uint64_t)(uintptr_t)x},
-                                                       {"y", (uint64_t)(uintptr_t)y},
-                                                       {"width", (uint64_t)(uintptr_t)width}},
-                        8u);
     int suppress;
     if (ctx == NULL)
         return;
@@ -7746,17 +7510,6 @@ void glCompressedTextureImage2DEXT(GLuint texture, GLenum target, GLint level,
                                    GLenum internalformat, GLsizei width, GLsizei height,
                                    GLint border, GLsizei imageSize, const void *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glCompressedTextureImage2DEXT",
-        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                       {"target", (uint64_t)(uintptr_t)target},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height},
-                                       {"border", (uint64_t)(uintptr_t)border},
-                                       {"imageSize", (uint64_t)(uintptr_t)imageSize}},
-        8u);
     const unsigned char *owned;
     unsigned char *staged = NULL;
     size_t expected = 0u;
@@ -7797,16 +7550,6 @@ void glCompressedTextureSubImage2DEXT(GLuint texture, GLenum target, GLint level
                                       GLint yoffset, GLsizei width, GLsizei height, GLenum format,
                                       GLsizei imageSize, const void *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glCompressedTextureSubImage2DEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                                       {"width", (uint64_t)(uintptr_t)width},
-                                                       {"height", (uint64_t)(uintptr_t)height},
-                                                       {"format", (uint64_t)(uintptr_t)format}},
-                        8u);
     const unsigned char *owned;
     unsigned char *staged = NULL;
     size_t expected = 0u;
@@ -7847,17 +7590,6 @@ void glCompressedTextureImage3DEXT(GLuint texture, GLenum target, GLint level,
                                    GLsizei depth, GLint border, GLsizei imageSize,
                                    const void *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glCompressedTextureImage3DEXT",
-        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                       {"target", (uint64_t)(uintptr_t)target},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height},
-                                       {"depth", (uint64_t)(uintptr_t)depth},
-                                       {"border", (uint64_t)(uintptr_t)border}},
-        8u);
     const unsigned char *owned;
     unsigned char *staged = NULL;
     size_t expected = 0u;
@@ -7904,16 +7636,6 @@ void glCompressedTextureSubImage3DEXT(GLuint texture, GLenum target, GLint level
                                       GLsizei depth, GLenum format, GLsizei imageSize,
                                       const void *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glCompressedTextureSubImage3DEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                                       {"zoffset", (uint64_t)(uintptr_t)zoffset},
-                                                       {"width", (uint64_t)(uintptr_t)width},
-                                                       {"height", (uint64_t)(uintptr_t)height}},
-                        8u);
     const unsigned char *owned;
     unsigned char *staged = NULL;
     size_t expected = 0u;
@@ -7956,17 +7678,6 @@ void glTextureImage2DEXT(GLuint texture, GLenum target, GLint level, GLint inter
                          GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type,
                          const void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glTextureImage2DEXT",
-        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                       {"target", (uint64_t)(uintptr_t)target},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height},
-                                       {"border", (uint64_t)(uintptr_t)border},
-                                       {"format", (uint64_t)(uintptr_t)format}},
-        8u);
     size_t components = 0u, data_size = 0u;
     const unsigned char *data;
     unsigned char *owned = NULL;
@@ -8009,16 +7720,6 @@ void glTextureSubImage2DEXT(GLuint texture, GLenum target, GLint level, GLint xo
                             GLint yoffset, GLsizei width, GLsizei height, GLenum format,
                             GLenum type, const void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTextureSubImage2DEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                                       {"width", (uint64_t)(uintptr_t)width},
-                                                       {"height", (uint64_t)(uintptr_t)height},
-                                                       {"format", (uint64_t)(uintptr_t)format}},
-                        8u);
     size_t components = 0u, data_size = 0u;
     const unsigned char *data;
     unsigned char *owned = NULL;
@@ -8060,17 +7761,6 @@ void glTextureImage3DEXT(GLuint texture, GLenum target, GLint level, GLint inter
                          GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format,
                          GLenum type, const void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glTextureImage3DEXT",
-        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                       {"target", (uint64_t)(uintptr_t)target},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height},
-                                       {"depth", (uint64_t)(uintptr_t)depth},
-                                       {"border", (uint64_t)(uintptr_t)border}},
-        8u);
     size_t components = 0u, data_size = 0u;
     const unsigned char *data;
     unsigned char *owned = NULL;
@@ -8113,16 +7803,6 @@ void glTextureSubImage3DEXT(GLuint texture, GLenum target, GLint level, GLint xo
                             GLint yoffset, GLint zoffset, GLsizei width, GLsizei height,
                             GLsizei depth, GLenum format, GLenum type, const void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTextureSubImage3DEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                                       {"zoffset", (uint64_t)(uintptr_t)zoffset},
-                                                       {"width", (uint64_t)(uintptr_t)width},
-                                                       {"height", (uint64_t)(uintptr_t)height}},
-                        8u);
     size_t components = 0u, data_size = 0u;
     const unsigned char *data;
     unsigned char *owned = NULL;
@@ -8163,17 +7843,6 @@ void glTextureSubImage3DEXT(GLuint texture, GLenum target, GLint level, GLint xo
 void glCopyTextureImage2DEXT(GLuint texture, GLenum target, GLint level, GLenum internalformat,
                              GLint x, GLint y, GLsizei width, GLsizei height, GLint border) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glCopyTextureImage2DEXT",
-        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                       {"target", (uint64_t)(uintptr_t)target},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"x", (uint64_t)(uintptr_t)x},
-                                       {"y", (uint64_t)(uintptr_t)y},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height}},
-        8u);
     struct mgl_texture *obj;
     GLenum object_target;
     GLuint *binding;
@@ -8220,16 +7889,6 @@ void glCopyTextureImage2DEXT(GLuint texture, GLenum target, GLint level, GLenum 
 void glCopyTextureSubImage2DEXT(GLuint texture, GLenum target, GLint level, GLint xoffset,
                                 GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glCopyTextureSubImage2DEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                                       {"x", (uint64_t)(uintptr_t)x},
-                                                       {"y", (uint64_t)(uintptr_t)y},
-                                                       {"width", (uint64_t)(uintptr_t)width}},
-                        8u);
     struct mgl_texture *obj;
     GLenum object_target;
     GLuint *binding;
@@ -8277,16 +7936,6 @@ void glCopyTextureSubImage3DEXT(GLuint texture, GLenum target, GLint level, GLin
                                 GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width,
                                 GLsizei height) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glCopyTextureSubImage3DEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                                       {"zoffset", (uint64_t)(uintptr_t)zoffset},
-                                                       {"x", (uint64_t)(uintptr_t)x},
-                                                       {"y", (uint64_t)(uintptr_t)y}},
-                        8u);
     struct mgl_texture *obj;
     GLuint *binding;
     GLuint saved;
@@ -9136,11 +8785,6 @@ int mgl_texture_apply_compressed_sub_image_3d_tight_on_unit(
 
 void glBindMultiTexture(GLenum texunit, GLenum target, GLuint texture) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glBindMultiTexture",
-                        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"texture", (uint64_t)(uintptr_t)texture}},
-                        3u);
     struct mgl_texture *obj = NULL;
     GLuint native_name = 0u;
     unsigned unit;
@@ -9231,13 +8875,6 @@ void glBindMultiTextureEXT(GLenum texunit, GLenum target, GLuint texture) {
 
 void glMultiTexBuffer(GLenum texunit, GLenum target, GLenum internalformat, GLuint buffer) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glMultiTexBuffer",
-        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                       {"target", (uint64_t)(uintptr_t)target},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"buffer", (uint64_t)(uintptr_t)buffer}},
-        4u);
     struct mgl_texture *texture;
     unsigned unit, saved_unit;
     if (ctx == NULL)
@@ -9384,11 +9021,6 @@ void glTexParameteri(GLenum target, GLenum pname, GLint param) {
     struct mgl_context *ctx = mgl_context_current();
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_TEXTURE_STATE);
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_TEX_PARAMETER);
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTexParameteri",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"param", (uint64_t)(uintptr_t)param}},
-                        3u);
     struct mgl_texture *obj;
     int result;
     if (ctx == NULL)
@@ -9457,10 +9089,6 @@ void glTexParameteri(GLenum target, GLenum pname, GLint param) {
 
 void glTexParameterf(GLenum target, GLenum pname, GLfloat param) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTexParameterf",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname}},
-                        2u);
     struct mgl_texture *obj;
     if (ctx == NULL)
         return;
@@ -9504,11 +9132,6 @@ void glTexParameterf(GLenum target, GLenum pname, GLfloat param) {
 
 void glTexParameteriv(GLenum target, GLenum pname, const GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTexParameteriv",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_texture *obj;
     GLfloat converted[4];
     if (ctx == NULL || params == NULL)
@@ -9564,11 +9187,6 @@ void glTexParameteriv(GLenum target, GLenum pname, const GLint *params) {
 
 void glTexParameterfv(GLenum target, GLenum pname, const GLfloat *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTexParameterfv",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_texture *obj;
     if (ctx == NULL || params == NULL)
         return;
@@ -9620,11 +9238,6 @@ void glTexParameterfv(GLenum target, GLenum pname, const GLfloat *params) {
 
 void glTexParameterIiv(GLenum target, GLenum pname, const GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTexParameterIiv",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_texture *obj;
     if (ctx == NULL || params == NULL)
         return;
@@ -9662,11 +9275,6 @@ void glTexParameterIiv(GLenum target, GLenum pname, const GLint *params) {
 
 void glTexParameterIuiv(GLenum target, GLenum pname, const GLuint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTexParameterIuiv",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_texture *obj;
     if (ctx == NULL || params == NULL)
         return;
@@ -9704,11 +9312,6 @@ void glTexParameterIuiv(GLenum target, GLenum pname, const GLuint *params) {
 
 void glGetTexParameteriv(GLenum target, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetTexParameteriv",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_texture *obj;
     if (ctx == NULL || params == NULL)
         return;
@@ -9826,11 +9429,6 @@ void glGetTexParameteriv(GLenum target, GLenum pname, GLint *params) {
 
 void glGetTexParameterfv(GLenum target, GLenum pname, GLfloat *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetTexParameterfv",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_texture *obj;
     GLint value = 0;
     if (ctx == NULL || params == NULL)
@@ -9895,11 +9493,6 @@ void glGetTexParameterfv(GLenum target, GLenum pname, GLfloat *params) {
 
 void glGetTexParameterIiv(GLenum target, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetTexParameterIiv",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_texture *obj;
     if (ctx == NULL || params == NULL)
         return;
@@ -9926,11 +9519,6 @@ void glGetTexParameterIiv(GLenum target, GLenum pname, GLint *params) {
 
 void glGetTexParameterIuiv(GLenum target, GLenum pname, GLuint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetTexParameterIuiv",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_texture *obj;
     GLint value = 0;
     if (ctx == NULL || params == NULL)
@@ -9971,12 +9559,6 @@ void glGetTexParameterIuiv(GLenum target, GLenum pname, GLuint *params) {
 
 void glMultiTexParameteri(GLenum texunit, GLenum target, GLenum pname, GLint param) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glMultiTexParameteri",
-                        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"param", (uint64_t)(uintptr_t)param}},
-                        4u);
     struct mgl_texture *obj;
     unsigned unit;
     int result;
@@ -10032,12 +9614,6 @@ void glMultiTexParameteri(GLenum texunit, GLenum target, GLenum pname, GLint par
 
 void glMultiTexParameteriv(GLenum texunit, GLenum target, GLenum pname, const GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glMultiTexParameteriv",
-                        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     struct mgl_texture *obj;
     unsigned unit;
     GLfloat converted[4];
@@ -10076,11 +9652,6 @@ void glMultiTexParameteriv(GLenum texunit, GLenum target, GLenum pname, const GL
 
 void glMultiTexParameterf(GLenum texunit, GLenum target, GLenum pname, GLfloat param) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glMultiTexParameterf",
-                        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname}},
-                        3u);
     struct mgl_texture *obj;
     unsigned unit;
     if (ctx == NULL)
@@ -10121,12 +9692,6 @@ void glMultiTexParameterf(GLenum texunit, GLenum target, GLenum pname, GLfloat p
 
 void glMultiTexParameterfv(GLenum texunit, GLenum target, GLenum pname, const GLfloat *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glMultiTexParameterfv",
-                        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     struct mgl_texture *obj;
     unsigned unit;
     if (ctx == NULL || params == NULL)
@@ -10163,12 +9728,6 @@ void glMultiTexParameterfv(GLenum texunit, GLenum target, GLenum pname, const GL
 
 void glMultiTexParameterIivEXT(GLenum texunit, GLenum target, GLenum pname, const GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glMultiTexParameterIivEXT",
-                        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     struct mgl_texture *obj;
     unsigned unit;
     if (ctx == NULL || params == NULL)
@@ -10208,12 +9767,6 @@ void glMultiTexParameterIivEXT(GLenum texunit, GLenum target, GLenum pname, cons
 
 void glMultiTexParameterIuivEXT(GLenum texunit, GLenum target, GLenum pname, const GLuint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glMultiTexParameterIuivEXT",
-                        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     struct mgl_texture *obj;
     unsigned unit;
     if (ctx == NULL || params == NULL)
@@ -10253,12 +9806,6 @@ void glMultiTexParameterIuivEXT(GLenum texunit, GLenum target, GLenum pname, con
 
 void glGetMultiTexParameteriv(GLenum texunit, GLenum target, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetMultiTexParameteriv",
-                        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     struct mgl_texture *obj;
     unsigned unit;
     if (ctx == NULL || params == NULL)
@@ -10357,12 +9904,6 @@ void glGetMultiTexParameteriv(GLenum texunit, GLenum target, GLenum pname, GLint
 
 void glGetMultiTexParameterfv(GLenum texunit, GLenum target, GLenum pname, GLfloat *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetMultiTexParameterfv",
-                        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     struct mgl_texture *obj;
     unsigned unit;
     GLint value = 0;
@@ -10423,12 +9964,6 @@ void glGetMultiTexParameterfv(GLenum texunit, GLenum target, GLenum pname, GLflo
 
 void glGetMultiTexParameterIivEXT(GLenum texunit, GLenum target, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetMultiTexParameterIivEXT",
-                        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     struct mgl_texture *obj;
     unsigned unit;
     if (ctx == NULL || params == NULL)
@@ -10457,12 +9992,6 @@ void glGetMultiTexParameterIivEXT(GLenum texunit, GLenum target, GLenum pname, G
 
 void glGetMultiTexParameterIuivEXT(GLenum texunit, GLenum target, GLenum pname, GLuint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetMultiTexParameterIuivEXT",
-                        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     struct mgl_texture *obj;
     unsigned unit;
     GLint value = 0;
@@ -11529,13 +11058,6 @@ static int read_rendered_color_texture(struct mgl_context *ctx, const struct mgl
 
 void glGetTexImage(GLenum target, GLint level, GLenum format, GLenum type, void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetTexImage",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"format", (uint64_t)(uintptr_t)format},
-                                                       {"type", (uint64_t)(uintptr_t)type},
-                                                       {"pixels", (uint64_t)(uintptr_t)pixels}},
-                        5u);
     struct mgl_texture *obj;
     struct mgl_texture_level *src_level;
     struct mgl_buffer *pack_buffer = NULL;
@@ -12016,17 +11538,6 @@ void glCopyImageSubData(GLuint srcName, GLenum srcTarget, GLint srcLevel, GLint 
                         GLint dstY, GLint dstZ, GLsizei srcWidth, GLsizei srcHeight,
                         GLsizei srcDepth) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glCopyImageSubData",
-        (const struct mgl_error_arg[]){{"srcName", (uint64_t)(uintptr_t)srcName},
-                                       {"srcTarget", (uint64_t)(uintptr_t)srcTarget},
-                                       {"srcLevel", (uint64_t)(uintptr_t)srcLevel},
-                                       {"srcX", (uint64_t)(uintptr_t)srcX},
-                                       {"srcY", (uint64_t)(uintptr_t)srcY},
-                                       {"srcZ", (uint64_t)(uintptr_t)srcZ},
-                                       {"dstName", (uint64_t)(uintptr_t)dstName},
-                                       {"dstTarget", (uint64_t)(uintptr_t)dstTarget}},
-        8u);
     struct mgl_texture *src, *dst;
     struct mgl_texture_level *sl, *dl;
     unsigned char *snapshot = NULL;
@@ -12185,9 +11696,6 @@ void glCopyImageSubData(GLuint srcName, GLenum srcTarget, GLint srcLevel, GLint 
 void glGenerateMipmap(GLenum target) {
     struct mgl_context *ctx = mgl_context_current();
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_GENERATE_MIPMAP);
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGenerateMipmap",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target}},
-                        1u);
     struct mgl_texture *obj;
     GLint level, max_level;
     if (ctx == NULL)
@@ -12328,11 +11836,6 @@ void glGetnCompressedTexImage(GLenum target, GLint level, GLsizei bufSize, void 
 
 void glGetCompressedTexImage(GLenum target, GLint level, void *img) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetCompressedTexImage",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"img", (uint64_t)(uintptr_t)img}},
-                        3u);
     struct mgl_texture *obj;
     struct mgl_texture_level *src_level;
     struct mgl_buffer *pack_buffer = NULL;
@@ -12621,14 +12124,6 @@ static int get_cube_texture_image(struct mgl_context *ctx, struct mgl_texture *o
 void glGetTextureImage(GLuint texture, GLint level, GLenum format, GLenum type, GLsizei bufSize,
                        void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetTextureImage",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"format", (uint64_t)(uintptr_t)format},
-                                                       {"type", (uint64_t)(uintptr_t)type},
-                                                       {"bufSize", (uint64_t)(uintptr_t)bufSize},
-                                                       {"pixels", (uint64_t)(uintptr_t)pixels}},
-                        6u);
     struct mgl_texture *obj;
     struct mgl_texture_level *src;
     GLuint *binding_slot;
@@ -13173,14 +12668,6 @@ void glGetCompressedTextureSubImage(GLuint texture, GLint level, GLint xoffset, 
 void glGetTextureImageEXT(GLuint texture, GLenum target, GLint level, GLenum format, GLenum type,
                           void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetTextureImageEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"format", (uint64_t)(uintptr_t)format},
-                                                       {"type", (uint64_t)(uintptr_t)type},
-                                                       {"pixels", (uint64_t)(uintptr_t)pixels}},
-                        6u);
     GLenum object_target;
     GLuint *binding;
     GLuint saved;
@@ -13211,12 +12698,6 @@ void glGetTextureImageEXT(GLuint texture, GLenum target, GLint level, GLenum for
 
 void glGetCompressedTextureImageEXT(GLuint texture, GLenum target, GLint level, void *img) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetCompressedTextureImageEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"img", (uint64_t)(uintptr_t)img}},
-                        4u);
     GLenum object_target;
     GLuint *binding;
     GLuint saved;
@@ -13242,12 +12723,6 @@ void glGetCompressedTextureImageEXT(GLuint texture, GLenum target, GLint level, 
 
 void glGetTextureParameterivEXT(GLuint texture, GLenum target, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetTextureParameterivEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     GLenum object_target;
     GLuint *binding;
     GLuint saved;
@@ -13269,12 +12744,6 @@ void glGetTextureParameterivEXT(GLuint texture, GLenum target, GLenum pname, GLi
 
 void glGetTextureParameterfvEXT(GLuint texture, GLenum target, GLenum pname, GLfloat *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetTextureParameterfvEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     GLenum object_target;
     GLuint *binding;
     GLuint saved;
@@ -13296,12 +12765,6 @@ void glGetTextureParameterfvEXT(GLuint texture, GLenum target, GLenum pname, GLf
 
 void glGetTextureParameterIivEXT(GLuint texture, GLenum target, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetTextureParameterIivEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     struct mgl_texture *obj;
     if (ctx == NULL || params == NULL)
         return;
@@ -13325,12 +12788,6 @@ void glGetTextureParameterIivEXT(GLuint texture, GLenum target, GLenum pname, GL
 
 void glGetTextureParameterIuivEXT(GLuint texture, GLenum target, GLenum pname, GLuint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetTextureParameterIuivEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     struct mgl_texture *obj;
     GLint value = 0;
     if (ctx == NULL || params == NULL)
@@ -13379,13 +12836,6 @@ static int texture_level_component_pname(GLenum pname) {
 void glGetTextureLevelParameterivEXT(GLuint texture, GLenum target, GLint level, GLenum pname,
                                      GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetTextureLevelParameterivEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        5u);
     GLenum object_target;
     GLuint *binding;
     GLuint saved;
@@ -13418,13 +12868,6 @@ void glGetTextureLevelParameterivEXT(GLuint texture, GLenum target, GLint level,
 void glGetTextureLevelParameterfvEXT(GLuint texture, GLenum target, GLint level, GLenum pname,
                                      GLfloat *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetTextureLevelParameterfvEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        5u);
     GLenum object_target;
     GLuint *binding;
     GLuint saved;
@@ -13456,12 +12899,6 @@ void glGetTextureLevelParameterfvEXT(GLuint texture, GLenum target, GLint level,
 
 void glGetTexLevelParameteriv(GLenum target, GLint level, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetTexLevelParameteriv",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     struct mgl_texture *obj;
     struct mgl_texture_level *src_level;
     if (ctx == NULL || params == NULL)
@@ -13687,17 +13124,6 @@ void glMultiTexImage2D(GLenum texunit, GLenum target, GLint level, GLint interna
                        GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type,
                        const void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glMultiTexImage2D",
-        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                       {"target", (uint64_t)(uintptr_t)target},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height},
-                                       {"border", (uint64_t)(uintptr_t)border},
-                                       {"format", (uint64_t)(uintptr_t)format}},
-        8u);
     size_t components = 0u, data_size = 0u;
     const unsigned char *data;
     unsigned char *owned = NULL;
@@ -13746,16 +13172,6 @@ void glMultiTexSubImage2D(GLenum texunit, GLenum target, GLint level, GLint xoff
                           GLsizei width, GLsizei height, GLenum format, GLenum type,
                           const void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glMultiTexSubImage2D",
-                        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                                       {"width", (uint64_t)(uintptr_t)width},
-                                                       {"height", (uint64_t)(uintptr_t)height},
-                                                       {"format", (uint64_t)(uintptr_t)format}},
-                        8u);
     size_t components = 0u, data_size = 0u;
     const unsigned char *data;
     unsigned char *owned = NULL;
@@ -13802,17 +13218,6 @@ void glMultiTexImage3D(GLenum texunit, GLenum target, GLint level, GLint interna
                        GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format,
                        GLenum type, const void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glMultiTexImage3D",
-        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                       {"target", (uint64_t)(uintptr_t)target},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height},
-                                       {"depth", (uint64_t)(uintptr_t)depth},
-                                       {"border", (uint64_t)(uintptr_t)border}},
-        8u);
     size_t components = 0u, data_size = 0u;
     const unsigned char *data;
     unsigned char *owned = NULL;
@@ -13861,16 +13266,6 @@ void glMultiTexSubImage3D(GLenum texunit, GLenum target, GLint level, GLint xoff
                           GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                           GLenum format, GLenum type, const void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glMultiTexSubImage3D",
-                        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                                       {"zoffset", (uint64_t)(uintptr_t)zoffset},
-                                                       {"width", (uint64_t)(uintptr_t)width},
-                                                       {"height", (uint64_t)(uintptr_t)height}},
-                        8u);
     size_t components = 0u, data_size = 0u;
     const unsigned char *data;
     unsigned char *owned = NULL;
@@ -13919,17 +13314,6 @@ void glCompressedMultiTexImage2D(GLenum texunit, GLenum target, GLint level, GLe
                                  GLsizei width, GLsizei height, GLint border, GLsizei imageSize,
                                  const void *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glCompressedMultiTexImage2D",
-        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                       {"target", (uint64_t)(uintptr_t)target},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height},
-                                       {"border", (uint64_t)(uintptr_t)border},
-                                       {"imageSize", (uint64_t)(uintptr_t)imageSize}},
-        8u);
     const unsigned char *owned;
     unsigned char *staged = NULL;
     size_t expected = 0u;
@@ -13971,16 +13355,6 @@ void glCompressedMultiTexSubImage2D(GLenum texunit, GLenum target, GLint level, 
                                     GLint yoffset, GLsizei width, GLsizei height, GLenum format,
                                     GLsizei imageSize, const void *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glCompressedMultiTexSubImage2D",
-                        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                                       {"width", (uint64_t)(uintptr_t)width},
-                                                       {"height", (uint64_t)(uintptr_t)height},
-                                                       {"format", (uint64_t)(uintptr_t)format}},
-                        8u);
     const unsigned char *owned;
     unsigned char *staged = NULL;
     size_t expected = 0u;
@@ -14021,17 +13395,6 @@ void glCompressedMultiTexImage3D(GLenum texunit, GLenum target, GLint level, GLe
                                  GLsizei width, GLsizei height, GLsizei depth, GLint border,
                                  GLsizei imageSize, const void *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glCompressedMultiTexImage3D",
-        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                       {"target", (uint64_t)(uintptr_t)target},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height},
-                                       {"depth", (uint64_t)(uintptr_t)depth},
-                                       {"border", (uint64_t)(uintptr_t)border}},
-        8u);
     const unsigned char *owned;
     unsigned char *staged = NULL;
     size_t expected = 0u;
@@ -14079,16 +13442,6 @@ void glCompressedMultiTexSubImage3D(GLenum texunit, GLenum target, GLint level, 
                                     GLsizei depth, GLenum format, GLsizei imageSize,
                                     const void *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glCompressedMultiTexSubImage3D",
-                        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                                       {"zoffset", (uint64_t)(uintptr_t)zoffset},
-                                                       {"width", (uint64_t)(uintptr_t)width},
-                                                       {"height", (uint64_t)(uintptr_t)height}},
-                        8u);
     const unsigned char *owned;
     unsigned char *staged = NULL;
     size_t expected = 0u;
@@ -14131,17 +13484,6 @@ void glCompressedMultiTexSubImage3D(GLenum texunit, GLenum target, GLint level, 
 void glCopyMultiTexImage2D(GLenum texunit, GLenum target, GLint level, GLenum internalformat,
                            GLint x, GLint y, GLsizei width, GLsizei height, GLint border) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glCopyMultiTexImage2D",
-        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                       {"target", (uint64_t)(uintptr_t)target},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"x", (uint64_t)(uintptr_t)x},
-                                       {"y", (uint64_t)(uintptr_t)y},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height}},
-        8u);
     unsigned unit, saved_unit;
     int suppress;
     if (ctx == NULL)
@@ -14179,16 +13521,6 @@ void glCopyMultiTexImage2D(GLenum texunit, GLenum target, GLint level, GLenum in
 void glCopyMultiTexSubImage2D(GLenum texunit, GLenum target, GLint level, GLint xoffset,
                               GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glCopyMultiTexSubImage2D",
-                        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                                       {"x", (uint64_t)(uintptr_t)x},
-                                                       {"y", (uint64_t)(uintptr_t)y},
-                                                       {"width", (uint64_t)(uintptr_t)width}},
-                        8u);
     unsigned unit, saved_unit;
     int suppress;
     if (ctx == NULL)
@@ -14227,16 +13559,6 @@ void glCopyMultiTexSubImage3D(GLenum texunit, GLenum target, GLint level, GLint 
                               GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width,
                               GLsizei height) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glCopyMultiTexSubImage3D",
-                        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                                       {"zoffset", (uint64_t)(uintptr_t)zoffset},
-                                                       {"x", (uint64_t)(uintptr_t)x},
-                                                       {"y", (uint64_t)(uintptr_t)y}},
-                        8u);
     unsigned unit, saved_unit;
     int suppress;
     if (ctx == NULL)
@@ -14495,15 +13817,6 @@ static int texture_storage_multisample(struct mgl_context *ctx, struct mgl_textu
 void glTexImage2DMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width,
                              GLsizei height, GLboolean fixedsamplelocations) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTexImage2DMultisample",
-                        (const struct mgl_error_arg[]){
-                            {"target", (uint64_t)(uintptr_t)target},
-                            {"samples", (uint64_t)(uintptr_t)samples},
-                            {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                            {"width", (uint64_t)(uintptr_t)width},
-                            {"height", (uint64_t)(uintptr_t)height},
-                            {"fixedsamplelocations", (uint64_t)(uintptr_t)fixedsamplelocations}},
-                        6u);
     struct mgl_texture *obj;
     struct mgl_texture_level *level;
     if (ctx == NULL)
@@ -14552,16 +13865,6 @@ void glTexImage2DMultisample(GLenum target, GLsizei samples, GLenum internalform
 void glTexImage3DMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width,
                              GLsizei height, GLsizei depth, GLboolean fixedsamplelocations) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTexImage3DMultisample",
-                        (const struct mgl_error_arg[]){
-                            {"target", (uint64_t)(uintptr_t)target},
-                            {"samples", (uint64_t)(uintptr_t)samples},
-                            {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                            {"width", (uint64_t)(uintptr_t)width},
-                            {"height", (uint64_t)(uintptr_t)height},
-                            {"depth", (uint64_t)(uintptr_t)depth},
-                            {"fixedsamplelocations", (uint64_t)(uintptr_t)fixedsamplelocations}},
-                        7u);
     struct mgl_texture *obj;
     struct mgl_texture_level *level;
     if (ctx == NULL)
@@ -14610,15 +13913,6 @@ void glTexImage3DMultisample(GLenum target, GLsizei samples, GLenum internalform
 void glTexStorage2DMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width,
                                GLsizei height, GLboolean fixedsamplelocations) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTexStorage2DMultisample",
-                        (const struct mgl_error_arg[]){
-                            {"target", (uint64_t)(uintptr_t)target},
-                            {"samples", (uint64_t)(uintptr_t)samples},
-                            {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                            {"width", (uint64_t)(uintptr_t)width},
-                            {"height", (uint64_t)(uintptr_t)height},
-                            {"fixedsamplelocations", (uint64_t)(uintptr_t)fixedsamplelocations}},
-                        6u);
     struct mgl_texture *obj;
     if (ctx == NULL)
         return;
@@ -14642,16 +13936,6 @@ void glTexStorage2DMultisample(GLenum target, GLsizei samples, GLenum internalfo
 void glTexStorage3DMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width,
                                GLsizei height, GLsizei depth, GLboolean fixedsamplelocations) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTexStorage3DMultisample",
-                        (const struct mgl_error_arg[]){
-                            {"target", (uint64_t)(uintptr_t)target},
-                            {"samples", (uint64_t)(uintptr_t)samples},
-                            {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                            {"width", (uint64_t)(uintptr_t)width},
-                            {"height", (uint64_t)(uintptr_t)height},
-                            {"depth", (uint64_t)(uintptr_t)depth},
-                            {"fixedsamplelocations", (uint64_t)(uintptr_t)fixedsamplelocations}},
-                        7u);
     struct mgl_texture *obj;
     if (ctx == NULL)
         return;
@@ -14717,13 +14001,6 @@ void glTextureStorage3DMultisample(GLuint texture, GLsizei samples, GLenum inter
 
 void glFramebufferTexture(GLenum target, GLenum attachment, GLuint texture, GLint level) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glFramebufferTexture",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"attachment", (uint64_t)(uintptr_t)attachment},
-                                       {"texture", (uint64_t)(uintptr_t)texture},
-                                       {"level", (uint64_t)(uintptr_t)level}},
-        4u);
     struct mgl_framebuffer *fb;
     struct mgl_texture *tex = NULL;
     GLenum tex_target = 0u;
@@ -14834,14 +14111,6 @@ void glFramebufferTexture(GLenum target, GLenum attachment, GLuint texture, GLin
 void glFramebufferTexture1D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture,
                             GLint level) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glFramebufferTexture1D",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"attachment", (uint64_t)(uintptr_t)attachment},
-                                       {"textarget", (uint64_t)(uintptr_t)textarget},
-                                       {"texture", (uint64_t)(uintptr_t)texture},
-                                       {"level", (uint64_t)(uintptr_t)level}},
-        5u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -14858,14 +14127,6 @@ void glFramebufferTexture1D(GLenum target, GLenum attachment, GLenum textarget, 
 void glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture,
                             GLint level) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glFramebufferTexture2D",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"attachment", (uint64_t)(uintptr_t)attachment},
-                                       {"textarget", (uint64_t)(uintptr_t)textarget},
-                                       {"texture", (uint64_t)(uintptr_t)texture},
-                                       {"level", (uint64_t)(uintptr_t)level}},
-        5u);
     struct mgl_framebuffer *fb;
     struct mgl_texture *tex = NULL;
     GLuint native_texture = 0u;
@@ -14963,15 +14224,6 @@ void glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum textarget, 
 void glFramebufferTexture3D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture,
                             GLint level, GLint zoffset) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glFramebufferTexture3D",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"attachment", (uint64_t)(uintptr_t)attachment},
-                                       {"textarget", (uint64_t)(uintptr_t)textarget},
-                                       {"texture", (uint64_t)(uintptr_t)texture},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"zoffset", (uint64_t)(uintptr_t)zoffset}},
-        6u);
     struct mgl_framebuffer *fb;
     struct mgl_texture *tex = NULL;
     GLuint native_texture = 0u;
@@ -15076,14 +14328,6 @@ void glFramebufferTexture3D(GLenum target, GLenum attachment, GLenum textarget, 
 void glFramebufferTextureLayer(GLenum target, GLenum attachment, GLuint texture, GLint level,
                                GLint layer) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glFramebufferTextureLayer",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"attachment", (uint64_t)(uintptr_t)attachment},
-                                       {"texture", (uint64_t)(uintptr_t)texture},
-                                       {"level", (uint64_t)(uintptr_t)level},
-                                       {"layer", (uint64_t)(uintptr_t)layer}},
-        5u);
     struct mgl_framebuffer *fb;
     struct mgl_texture *tex = NULL;
     GLuint native_texture = 0u;
@@ -15297,11 +14541,6 @@ static void dsa_native_restore_texture(struct mgl_context *ctx, GLenum target) {
 
 void glCreateTextures(GLenum target, GLsizei n, GLuint *textures) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glCreateTextures",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"n", (uint64_t)(uintptr_t)n},
-                                                       {"textures", (uint64_t)(uintptr_t)textures}},
-                        3u);
     GLsizei i;
     if (ctx == NULL)
         return;
@@ -15533,12 +14772,6 @@ static void ext_dsa_texture_border_apply_ui(struct mgl_context *ctx, struct mgl_
 
 void glTextureParameteriEXT(GLuint texture, GLenum target, GLenum pname, GLint param) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTextureParameteriEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"param", (uint64_t)(uintptr_t)param}},
-                        4u);
     struct mgl_texture *obj;
     int result;
     if (ctx == NULL)
@@ -15581,11 +14814,6 @@ void glTextureParameteriEXT(GLuint texture, GLenum target, GLenum pname, GLint p
 
 void glTextureParameterfEXT(GLuint texture, GLenum target, GLenum pname, GLfloat param) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTextureParameterfEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname}},
-                        3u);
     struct mgl_texture *obj;
     if (ctx == NULL)
         return;
@@ -15620,12 +14848,6 @@ void glTextureParameterfEXT(GLuint texture, GLenum target, GLenum pname, GLfloat
 
 void glTextureParameterivEXT(GLuint texture, GLenum target, GLenum pname, const GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTextureParameterivEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     struct mgl_texture *obj;
     GLfloat converted[4];
     if (ctx == NULL || params == NULL)
@@ -15659,12 +14881,6 @@ void glTextureParameterivEXT(GLuint texture, GLenum target, GLenum pname, const 
 
 void glTextureParameterfvEXT(GLuint texture, GLenum target, GLenum pname, const GLfloat *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTextureParameterfvEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     struct mgl_texture *obj;
     if (ctx == NULL || params == NULL)
         return;
@@ -15696,12 +14912,6 @@ void glTextureParameterfvEXT(GLuint texture, GLenum target, GLenum pname, const 
 
 void glTextureParameterIivEXT(GLuint texture, GLenum target, GLenum pname, const GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTextureParameterIivEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     struct mgl_texture *obj;
     if (ctx == NULL || params == NULL)
         return;
@@ -15733,12 +14943,6 @@ void glTextureParameterIivEXT(GLuint texture, GLenum target, GLenum pname, const
 
 void glTextureParameterIuivEXT(GLuint texture, GLenum target, GLenum pname, const GLuint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTextureParameterIuivEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     struct mgl_texture *obj;
     if (ctx == NULL || params == NULL)
         return;
@@ -15770,11 +14974,6 @@ void glTextureParameterIuivEXT(GLuint texture, GLenum target, GLenum pname, cons
 
 void glTextureParameteri(GLuint texture, GLenum pname, GLint param) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTextureParameteri",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"param", (uint64_t)(uintptr_t)param}},
-                        3u);
     struct mgl_texture *obj;
     int result;
     if (ctx == NULL)
@@ -16008,11 +15207,6 @@ void glTextureParameterIuiv(GLuint texture, GLenum pname, const GLuint *params) 
 
 void glGetTextureParameteriv(GLuint texture, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetTextureParameteriv",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_texture *obj;
     if (ctx == NULL)
         return;
@@ -16314,16 +15508,6 @@ void glCopyTextureSubImage1D(GLuint texture, GLint level, GLint xoffset, GLint x
 void glTextureSubImage2D(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLsizei width,
                          GLsizei height, GLenum format, GLenum type, const void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTextureSubImage2D",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                                       {"width", (uint64_t)(uintptr_t)width},
-                                                       {"height", (uint64_t)(uintptr_t)height},
-                                                       {"format", (uint64_t)(uintptr_t)format},
-                                                       {"type", (uint64_t)(uintptr_t)type}},
-                        8u);
     struct mgl_texture *obj;
     size_t components = 0u, data_size = 0u;
     const unsigned char *data;
@@ -16373,16 +15557,6 @@ void glTextureSubImage3D(GLuint texture, GLint level, GLint xoffset, GLint yoffs
                          GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type,
                          const void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTextureSubImage3D",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"xoffset", (uint64_t)(uintptr_t)xoffset},
-                                                       {"yoffset", (uint64_t)(uintptr_t)yoffset},
-                                                       {"zoffset", (uint64_t)(uintptr_t)zoffset},
-                                                       {"width", (uint64_t)(uintptr_t)width},
-                                                       {"height", (uint64_t)(uintptr_t)height},
-                                                       {"depth", (uint64_t)(uintptr_t)depth}},
-                        8u);
     struct mgl_texture *obj;
     size_t components = 0u, data_size = 0u, slice_size = 0u;
     const unsigned char *data;
@@ -16526,10 +15700,6 @@ void glGenerateTextureMipmap(GLuint texture) {
 
 void glGenerateTextureMipmapEXT(GLuint texture, GLenum target) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGenerateTextureMipmapEXT",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"target", (uint64_t)(uintptr_t)target}},
-                        2u);
     struct mgl_texture *obj;
     GLuint *binding;
     GLuint saved;
@@ -16597,12 +15767,6 @@ void glGenerateMultiTexMipmapEXT(GLenum texunit, GLenum target) {
 
 void glGetTextureLevelParameteriv(GLuint texture, GLint level, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetTextureLevelParameteriv",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     struct mgl_texture *obj;
     struct mgl_texture_level *lv;
     if (ctx == NULL)

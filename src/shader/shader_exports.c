@@ -77,8 +77,6 @@ static char *native_program_log(struct mgl_context *ctx, GLuint native_program) 
 
 GLuint glCreateShader(GLenum type) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glCreateShader",
-                        (const struct mgl_error_arg[]){{"type", (uint64_t)(uintptr_t)type}}, 1u);
     struct mgl_shader *shader;
     if (ctx == NULL)
         return 0u;
@@ -260,14 +258,6 @@ void glCompileShader(GLuint shader_name) {
 void glShaderBinary(GLsizei count, const GLuint *shader_names, GLenum binary_format,
                     const void *binary, GLsizei length) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glShaderBinary",
-        (const struct mgl_error_arg[]){{"count", (uint64_t)(uintptr_t)count},
-                                       {"shader_names", (uint64_t)(uintptr_t)shader_names},
-                                       {"binary_format", (uint64_t)(uintptr_t)binary_format},
-                                       {"binary", (uint64_t)(uintptr_t)binary},
-                                       {"length", (uint64_t)(uintptr_t)length}},
-        5u);
     struct mgl_shader **shader_objects = NULL;
     GLuint *native_names = NULL;
     GLint *formats = NULL;
@@ -498,13 +488,6 @@ void glReleaseShaderCompiler(void) {
 void glGetShaderPrecisionFormat(GLenum shadertype, GLenum precisiontype, GLint *range,
                                 GLint *precision) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glGetShaderPrecisionFormat",
-        (const struct mgl_error_arg[]){{"shadertype", (uint64_t)(uintptr_t)shadertype},
-                                       {"precisiontype", (uint64_t)(uintptr_t)precisiontype},
-                                       {"range", (uint64_t)(uintptr_t)range},
-                                       {"precision", (uint64_t)(uintptr_t)precision}},
-        4u);
     if (ctx == NULL || range == NULL || precision == NULL)
         return;
     if (shader_reject_inside_begin(ctx))
@@ -537,12 +520,6 @@ void glGetShaderPrecisionFormat(GLenum shadertype, GLenum precisiontype, GLint *
 
 void glGetShaderiv(GLuint shader_name, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glGetShaderiv",
-        (const struct mgl_error_arg[]){{"shader_name", (uint64_t)(uintptr_t)shader_name},
-                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                       {"params", (uint64_t)(uintptr_t)params}},
-        3u);
     struct mgl_shader *shader;
     if (ctx == NULL || params == NULL)
         return;
@@ -1418,12 +1395,6 @@ static void reflect_program_attributes(struct mgl_context *ctx, struct mgl_progr
 
 void glProgramParameteri(GLuint program_name, GLenum pname, GLint value) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glProgramParameteri",
-        (const struct mgl_error_arg[]){{"program_name", (uint64_t)(uintptr_t)program_name},
-                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                       {"value", (uint64_t)(uintptr_t)value}},
-        3u);
     struct mgl_program *program;
     if (ctx == NULL)
         return;
@@ -1842,12 +1813,6 @@ void glUseProgram(GLuint program_name) {
 
 void glGetProgramiv(GLuint program_name, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glGetProgramiv",
-        (const struct mgl_error_arg[]){{"program_name", (uint64_t)(uintptr_t)program_name},
-                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                       {"params", (uint64_t)(uintptr_t)params}},
-        3u);
     struct mgl_program *program;
     if (ctx == NULL || params == NULL)
         return;

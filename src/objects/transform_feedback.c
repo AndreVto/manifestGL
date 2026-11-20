@@ -166,10 +166,6 @@ GLboolean glIsTransformFeedback(GLuint id) {
 
 void glBindTransformFeedback(GLenum target, GLuint id) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glBindTransformFeedback",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"id", (uint64_t)(uintptr_t)id}},
-                        2u);
     struct mgl_transform_feedback *tf = NULL;
     if (ctx == NULL)
         return;
@@ -370,9 +366,6 @@ static int valid_tf_primitive(GLenum mode) {
 
 void glBeginTransformFeedback(GLenum primitiveMode) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glBeginTransformFeedback",
-        (const struct mgl_error_arg[]){{"primitiveMode", (uint64_t)(uintptr_t)primitiveMode}}, 1u);
     if (ctx == NULL)
         return;
     if (reject_during_begin_end(ctx))
@@ -539,13 +532,6 @@ void glDrawTransformFeedbackStreamInstanced(GLenum mode, GLuint id, GLuint strea
 void glTransformFeedbackVaryings(GLuint program, GLsizei count, const GLchar *const *varyings,
                                  GLenum bufferMode) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glTransformFeedbackVaryings",
-        (const struct mgl_error_arg[]){{"program", (uint64_t)(uintptr_t)program},
-                                       {"count", (uint64_t)(uintptr_t)count},
-                                       {"varyings", (uint64_t)(uintptr_t)varyings},
-                                       {"bufferMode", (uint64_t)(uintptr_t)bufferMode}},
-        4u);
     struct mgl_program *p;
     char **copy = NULL;
     GLsizei i;

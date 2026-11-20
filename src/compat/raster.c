@@ -1058,13 +1058,6 @@ int mgl_raster_draw_pixels_tight(struct mgl_context *ctx, GLsizei width, GLsizei
 
 void glDrawPixels(GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glDrawPixels",
-                        (const struct mgl_error_arg[]){{"width", (uint64_t)(uintptr_t)width},
-                                                       {"height", (uint64_t)(uintptr_t)height},
-                                                       {"format", (uint64_t)(uintptr_t)format},
-                                                       {"type", (uint64_t)(uintptr_t)type},
-                                                       {"pixels", (uint64_t)(uintptr_t)pixels}},
-                        5u);
     unsigned char *tight;
     size_t tight_bytes = 0u, pixel_bytes = 0u, element_bytes = 0u;
     unsigned channels = 0u;
@@ -2117,15 +2110,6 @@ static void write_read_color_packed(unsigned char *dst, GLenum type, const doubl
 void glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
                   void *pixels) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glReadPixels",
-                        (const struct mgl_error_arg[]){{"x", (uint64_t)(uintptr_t)x},
-                                                       {"y", (uint64_t)(uintptr_t)y},
-                                                       {"width", (uint64_t)(uintptr_t)width},
-                                                       {"height", (uint64_t)(uintptr_t)height},
-                                                       {"format", (uint64_t)(uintptr_t)format},
-                                                       {"type", (uint64_t)(uintptr_t)type},
-                                                       {"pixels", (uint64_t)(uintptr_t)pixels}},
-                        7u);
     unsigned char *rgba = NULL, *dst, *dst_base;
     float *rgba_float = NULL;
     size_t rgba_bytes = 0u, dest_bytes, pixel_bytes, noncolor_pixel_bytes;
@@ -2357,13 +2341,6 @@ void glReadnPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum forma
 
 void glCopyPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum type) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glCopyPixels",
-                        (const struct mgl_error_arg[]){{"x", (uint64_t)(uintptr_t)x},
-                                                       {"y", (uint64_t)(uintptr_t)y},
-                                                       {"width", (uint64_t)(uintptr_t)width},
-                                                       {"height", (uint64_t)(uintptr_t)height},
-                                                       {"type", (uint64_t)(uintptr_t)type}},
-                        5u);
     void *rgba = NULL;
     size_t bytes = 0u;
     GLenum pixel_type = GL_UNSIGNED_BYTE;

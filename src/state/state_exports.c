@@ -390,8 +390,6 @@ static GLdouble clamp01d(GLdouble value) {
 GLboolean glIsEnabled(GLenum cap) {
     struct mgl_context *ctx = mgl_context_current();
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_IS_ENABLED);
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glIsEnabled",
-                        (const struct mgl_error_arg[]){{"cap", (uint64_t)(uintptr_t)cap}}, 1u);
     GLboolean *slot;
     if (ctx == NULL)
         return GL_FALSE;
@@ -454,8 +452,6 @@ GLboolean glIsEnabled(GLenum cap) {
 void glEnable(GLenum cap) {
     struct mgl_context *ctx = mgl_context_current();
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_ENABLE_STATE);
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glEnable",
-                        (const struct mgl_error_arg[]){{"cap", (uint64_t)(uintptr_t)cap}}, 1u);
     GLboolean *slot;
     if (ctx == NULL)
         return;
@@ -548,8 +544,6 @@ void glEnable(GLenum cap) {
 void glDisable(GLenum cap) {
     struct mgl_context *ctx = mgl_context_current();
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_ENABLE_STATE);
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glDisable",
-                        (const struct mgl_error_arg[]){{"cap", (uint64_t)(uintptr_t)cap}}, 1u);
     GLboolean *slot;
     if (ctx == NULL)
         return;
@@ -710,10 +704,6 @@ void glBlendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha) {
 
 void glClampColor(GLenum target, GLenum clamp) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glClampColor",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"clamp", (uint64_t)(uintptr_t)clamp}},
-                        2u);
     if (ctx == NULL || reject_inside_begin(ctx))
         return;
     if (target != GL_CLAMP_VERTEX_COLOR && target != GL_CLAMP_FRAGMENT_COLOR &&
@@ -772,10 +762,6 @@ void glLineWidth(GLfloat width) {
 
 void glClipControl(GLenum origin, GLenum depth) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glClipControl",
-                        (const struct mgl_error_arg[]){{"origin", (uint64_t)(uintptr_t)origin},
-                                                       {"depth", (uint64_t)(uintptr_t)depth}},
-                        2u);
     if (ctx == NULL || reject_inside_begin(ctx))
         return;
     if (origin != GL_LOWER_LEFT && origin != GL_UPPER_LEFT) {
@@ -816,10 +802,6 @@ void glDepthBoundsEXT(GLclampd zmin, GLclampd zmax) {
 
 void glPatchParameteri(GLenum pname, GLint value) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glPatchParameteri",
-                        (const struct mgl_error_arg[]){{"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"value", (uint64_t)(uintptr_t)value}},
-                        2u);
     GLint limit = 0;
     if (ctx == NULL || reject_inside_begin(ctx))
         return;
@@ -847,10 +829,6 @@ void glPatchParameteri(GLenum pname, GLint value) {
 
 void glPatchParameterfv(GLenum pname, const GLfloat *values) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glPatchParameterfv",
-                        (const struct mgl_error_arg[]){{"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"values", (uint64_t)(uintptr_t)values}},
-                        2u);
     GLfloat *dst;
     size_t count;
     if (ctx == NULL || reject_inside_begin(ctx))
@@ -1016,10 +994,6 @@ void glPointParameterfvEXT(GLenum pname, const GLfloat *params) {
 
 void glPolygonMode(GLenum face, GLenum mode) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glPolygonMode",
-                        (const struct mgl_error_arg[]){{"face", (uint64_t)(uintptr_t)face},
-                                                       {"mode", (uint64_t)(uintptr_t)mode}},
-                        2u);
     if (ctx == NULL || reject_inside_begin(ctx))
         return;
     if (face != GL_FRONT && face != GL_BACK && face != GL_FRONT_AND_BACK) {
@@ -1161,10 +1135,6 @@ static GLenum *mgl_hint_state_ptr(struct mgl_raster_state *state, GLenum target)
 
 void glHint(GLenum target, GLenum mode) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glHint",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"mode", (uint64_t)(uintptr_t)mode}},
-                        2u);
     GLenum *slot;
     if (ctx == NULL)
         return;
@@ -1187,8 +1157,6 @@ void glHint(GLenum target, GLenum mode) {
 
 void glAlphaFunc(GLenum func, GLclampf ref) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glAlphaFunc",
-                        (const struct mgl_error_arg[]){{"func", (uint64_t)(uintptr_t)func}}, 1u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -1284,9 +1252,6 @@ static GLint viewport_round_to_int(GLfloat value) {
 void glViewportArrayv(GLuint first, GLsizei count, const GLfloat *v) {
     struct mgl_context *ctx = mgl_context_current();
     GLsizei i;
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glViewportArrayv",
-                        (const struct mgl_error_arg[]){{"first", first}, {"count", (uint64_t)count}},
-                        2u);
     if (ctx == NULL || !validate_viewport_span(ctx, first, count))
         return;
     if (count == 0)
@@ -1422,11 +1387,6 @@ static int mgl_indexed_query_component_count(GLenum target);
 
 void glGetDoublei_v(GLenum target, GLuint index, GLdouble *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetDoublei_v",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"index", (uint64_t)(uintptr_t)index},
-                                                       {"data", (uint64_t)(uintptr_t)data}},
-                        3u);
     if (ctx == NULL || reject_inside_begin(ctx) || data == NULL)
         return;
     if (target == GL_VIEWPORT || target == GL_SCISSOR_BOX || target == GL_DEPTH_RANGE) {
@@ -1474,8 +1434,6 @@ void glGetFloati_v(GLenum target, GLuint index, GLfloat *data) {
 
 void glDepthFunc(GLenum func) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glDepthFunc",
-                        (const struct mgl_error_arg[]){{"func", (uint64_t)(uintptr_t)func}}, 1u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -1517,8 +1475,6 @@ void glDepthMask(GLboolean flag) {
 
 void glActiveStencilFaceEXT(GLenum face) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glActiveStencilFaceEXT",
-                        (const struct mgl_error_arg[]){{"face", (uint64_t)(uintptr_t)face}}, 1u);
     if (ctx == NULL || reject_inside_begin(ctx))
         return;
     if (face != GL_FRONT && face != GL_BACK) {
@@ -1530,12 +1486,6 @@ void glActiveStencilFaceEXT(GLenum face) {
 
 void glStencilFuncSeparate(GLenum face, GLenum func, GLint ref, GLuint mask) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glStencilFuncSeparate",
-                        (const struct mgl_error_arg[]){{"face", (uint64_t)(uintptr_t)face},
-                                                       {"func", (uint64_t)(uintptr_t)func},
-                                                       {"ref", (uint64_t)(uintptr_t)ref},
-                                                       {"mask", (uint64_t)(uintptr_t)mask}},
-                        4u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -1598,10 +1548,6 @@ void glStencilFunc(GLenum func, GLint ref, GLuint mask) {
 
 void glStencilMaskSeparate(GLenum face, GLuint mask) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glStencilMaskSeparate",
-                        (const struct mgl_error_arg[]){{"face", (uint64_t)(uintptr_t)face},
-                                                       {"mask", (uint64_t)(uintptr_t)mask}},
-                        2u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -1659,12 +1605,6 @@ void glStencilMask(GLuint mask) {
 
 void glStencilOpSeparate(GLenum face, GLenum sfail, GLenum dpfail, GLenum dppass) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glStencilOpSeparate",
-                        (const struct mgl_error_arg[]){{"face", (uint64_t)(uintptr_t)face},
-                                                       {"sfail", (uint64_t)(uintptr_t)sfail},
-                                                       {"dpfail", (uint64_t)(uintptr_t)dpfail},
-                                                       {"dppass", (uint64_t)(uintptr_t)dppass}},
-                        4u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -1695,13 +1635,6 @@ void glStencilOpSeparate(GLenum face, GLenum sfail, GLenum dpfail, GLenum dppass
 
 void glStencilFuncSeparateATI(GLenum frontfunc, GLenum backfunc, GLint ref, GLuint mask) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glStencilFuncSeparateATI",
-        (const struct mgl_error_arg[]){{"frontfunc", (uint64_t)(uintptr_t)frontfunc},
-                                       {"backfunc", (uint64_t)(uintptr_t)backfunc},
-                                       {"ref", (uint64_t)(uintptr_t)ref},
-                                       {"mask", (uint64_t)(uintptr_t)mask}},
-        4u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -1796,8 +1729,6 @@ void glColorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha
 
 void glCullFace(GLenum mode) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glCullFace",
-                        (const struct mgl_error_arg[]){{"mode", (uint64_t)(uintptr_t)mode}}, 1u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -1820,8 +1751,6 @@ void glCullFace(GLenum mode) {
 
 void glFrontFace(GLenum mode) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glFrontFace",
-                        (const struct mgl_error_arg[]){{"mode", (uint64_t)(uintptr_t)mode}}, 1u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -1844,12 +1773,6 @@ void glFrontFace(GLenum mode) {
 
 void glBlendFuncSeparate(GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glBlendFuncSeparate",
-                        (const struct mgl_error_arg[]){{"srcRGB", (uint64_t)(uintptr_t)srcRGB},
-                                                       {"dstRGB", (uint64_t)(uintptr_t)dstRGB},
-                                                       {"srcAlpha", (uint64_t)(uintptr_t)srcAlpha},
-                                                       {"dstAlpha", (uint64_t)(uintptr_t)dstAlpha}},
-                        4u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -1888,11 +1811,6 @@ void glBlendFunc(GLenum sfactor, GLenum dfactor) {
 
 void glBlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glBlendEquationSeparate",
-        (const struct mgl_error_arg[]){{"modeRGB", (uint64_t)(uintptr_t)modeRGB},
-                                       {"modeAlpha", (uint64_t)(uintptr_t)modeAlpha}},
-        2u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -2043,10 +1961,6 @@ void glDisableIndexedEXT(GLenum cap, GLuint index) {
 
 GLboolean glIsEnabledi(GLenum cap, GLuint index) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glIsEnabledi",
-                        (const struct mgl_error_arg[]){{"cap", (uint64_t)(uintptr_t)cap},
-                                                       {"index", (uint64_t)(uintptr_t)index}},
-                        2u);
     if (ctx == NULL)
         return GL_FALSE;
     if (reject_inside_begin(ctx))
@@ -2062,10 +1976,6 @@ GLboolean glIsEnabledi(GLenum cap, GLuint index) {
 
 GLboolean glIsEnabledIndexed(GLenum cap, GLuint index) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glIsEnabledIndexed",
-                        (const struct mgl_error_arg[]){{"cap", (uint64_t)(uintptr_t)cap},
-                                                       {"index", (uint64_t)(uintptr_t)index}},
-                        2u);
     GLboolean *slot;
     if (ctx == NULL)
         return GL_FALSE;
@@ -2135,13 +2045,6 @@ void glColorMaskIndexedEXT(GLuint index, GLboolean red, GLboolean green, GLboole
 void glBlendFuncSeparatei(GLuint index, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha,
                           GLenum dstAlpha) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glBlendFuncSeparatei",
-                        (const struct mgl_error_arg[]){{"index", (uint64_t)(uintptr_t)index},
-                                                       {"srcRGB", (uint64_t)(uintptr_t)srcRGB},
-                                                       {"dstRGB", (uint64_t)(uintptr_t)dstRGB},
-                                                       {"srcAlpha", (uint64_t)(uintptr_t)srcAlpha},
-                                                       {"dstAlpha", (uint64_t)(uintptr_t)dstAlpha}},
-                        5u);
     struct mgl_draw_buffer_state *db;
     if (ctx == NULL)
         return;
@@ -2195,12 +2098,6 @@ void glBlendFunciEXT(GLuint index, GLenum src, GLenum dst) {
 
 void glBlendEquationSeparatei(GLuint index, GLenum modeRGB, GLenum modeAlpha) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glBlendEquationSeparatei",
-        (const struct mgl_error_arg[]){{"index", (uint64_t)(uintptr_t)index},
-                                       {"modeRGB", (uint64_t)(uintptr_t)modeRGB},
-                                       {"modeAlpha", (uint64_t)(uintptr_t)modeAlpha}},
-        3u);
     struct mgl_draw_buffer_state *db;
     if (ctx == NULL)
         return;
@@ -2343,11 +2240,6 @@ static int mgl_indexed_query_component_count(GLenum target) {
 
 void glGetBooleani_v(GLenum target, GLuint index, GLboolean *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetBooleani_v",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"index", (uint64_t)(uintptr_t)index},
-                                                       {"data", (uint64_t)(uintptr_t)data}},
-                        3u);
     const struct mgl_draw_buffer_state *db;
     GLint image_value = 0;
     if (ctx == NULL || data == NULL)
@@ -2570,11 +2462,6 @@ static GLint gles_limit_or_default(const struct mgl_context *ctx, GLenum pname, 
 
 void glGetMultisamplefv(GLenum pname, GLuint index, GLfloat *val) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetMultisamplefv",
-                        (const struct mgl_error_arg[]){{"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"index", (uint64_t)(uintptr_t)index},
-                                                       {"val", (uint64_t)(uintptr_t)val}},
-                        3u);
     GLint samples = 0;
     if (ctx == NULL || reject_inside_begin(ctx))
         return;
@@ -2672,10 +2559,6 @@ static GLint mgl_get_float_as_integer(GLfloat value, int normalized) {
 void glGetIntegerv(GLenum pname, GLint *data) {
     struct mgl_context *ctx = mgl_context_current();
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_GET_STATE);
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetIntegerv",
-                        (const struct mgl_error_arg[]){{"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"data", (uint64_t)(uintptr_t)data}},
-                        2u);
     if (ctx == NULL || data == NULL)
         return;
     if (reject_inside_begin(ctx))
@@ -5007,11 +4890,6 @@ void glPushClientAttribDefaultEXT(GLbitfield mask) {
 
 void glPixelMapfv(GLenum map, GLsizei mapsize, const GLfloat *values) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glPixelMapfv",
-                        (const struct mgl_error_arg[]){{"map", (uint64_t)(uintptr_t)map},
-                                                       {"mapsize", (uint64_t)(uintptr_t)mapsize},
-                                                       {"values", (uint64_t)(uintptr_t)values}},
-                        3u);
     GLdouble canonical[MGL_PIXEL_MAP_MAX_SIZE];
     GLsizei i;
     int integer;
@@ -5042,11 +4920,6 @@ void glPixelMapfv(GLenum map, GLsizei mapsize, const GLfloat *values) {
 
 void glPixelMapuiv(GLenum map, GLsizei mapsize, const GLuint *values) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glPixelMapuiv",
-                        (const struct mgl_error_arg[]){{"map", (uint64_t)(uintptr_t)map},
-                                                       {"mapsize", (uint64_t)(uintptr_t)mapsize},
-                                                       {"values", (uint64_t)(uintptr_t)values}},
-                        3u);
     GLdouble canonical[MGL_PIXEL_MAP_MAX_SIZE];
     GLsizei i;
     int integer;
@@ -5077,11 +4950,6 @@ void glPixelMapuiv(GLenum map, GLsizei mapsize, const GLuint *values) {
 
 void glPixelMapusv(GLenum map, GLsizei mapsize, const GLushort *values) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glPixelMapusv",
-                        (const struct mgl_error_arg[]){{"map", (uint64_t)(uintptr_t)map},
-                                                       {"mapsize", (uint64_t)(uintptr_t)mapsize},
-                                                       {"values", (uint64_t)(uintptr_t)values}},
-                        3u);
     GLdouble canonical[MGL_PIXEL_MAP_MAX_SIZE];
     GLsizei i;
     int integer;
@@ -5112,10 +4980,6 @@ void glPixelMapusv(GLenum map, GLsizei mapsize, const GLushort *values) {
 
 void glGetPixelMapfv(GLenum map, GLfloat *values) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetPixelMapfv",
-                        (const struct mgl_error_arg[]){{"map", (uint64_t)(uintptr_t)map},
-                                                       {"values", (uint64_t)(uintptr_t)values}},
-                        2u);
     int index;
     GLsizei i;
     if (ctx == NULL)
@@ -5135,10 +4999,6 @@ void glGetPixelMapfv(GLenum map, GLfloat *values) {
 
 void glGetPixelMapuiv(GLenum map, GLuint *values) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetPixelMapuiv",
-                        (const struct mgl_error_arg[]){{"map", (uint64_t)(uintptr_t)map},
-                                                       {"values", (uint64_t)(uintptr_t)values}},
-                        2u);
     int index, integer;
     GLsizei i;
     if (ctx == NULL)
@@ -5162,10 +5022,6 @@ void glGetPixelMapuiv(GLenum map, GLuint *values) {
 
 void glGetPixelMapusv(GLenum map, GLushort *values) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetPixelMapusv",
-                        (const struct mgl_error_arg[]){{"map", (uint64_t)(uintptr_t)map},
-                                                       {"values", (uint64_t)(uintptr_t)values}},
-                        2u);
     int index, integer;
     GLsizei i;
     if (ctx == NULL)
@@ -5264,8 +5120,6 @@ void glGetnPixelMapusv(GLenum map, GLsizei bufSize, GLushort *values) {
 
 void glPixelTransferf(GLenum pname, GLfloat param) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glPixelTransferf",
-                        (const struct mgl_error_arg[]){{"pname", (uint64_t)(uintptr_t)pname}}, 1u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -5386,11 +5240,6 @@ static GLuint indexed_query_limit(struct mgl_context *ctx, GLenum target) {
 
 void glGetIntegeri_v(GLenum target, GLuint index, GLint *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetIntegeri_v",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"index", (uint64_t)(uintptr_t)index},
-                                                       {"data", (uint64_t)(uintptr_t)data}},
-                        3u);
     const struct mgl_indexed_buffer_binding *slot = NULL;
     const struct mgl_image_unit_binding *image = NULL;
     if (ctx == NULL || data == NULL)
@@ -5597,11 +5446,6 @@ void glGetDoubleIndexedvEXT(GLenum target, GLuint index, GLdouble *data) {
 
 void glGetInteger64i_v(GLenum target, GLuint index, GLint64 *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetInteger64i_v",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"index", (uint64_t)(uintptr_t)index},
-                                                       {"data", (uint64_t)(uintptr_t)data}},
-                        3u);
     const struct mgl_indexed_buffer_binding *slot = NULL;
     GLint image_value = 0;
     GLint indexed_values[4] = {0, 0, 0, 0};

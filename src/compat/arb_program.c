@@ -880,11 +880,6 @@ GLboolean glIsProgramARB(GLuint program) {
 
 void glBindProgramARB(GLenum target, GLuint program_name) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glBindProgramARB",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"program_name", (uint64_t)(uintptr_t)program_name}},
-        2u);
     struct mgl_arb_program *program = NULL;
     GLuint *slot;
     if (ctx == NULL)
@@ -924,12 +919,6 @@ void glBindProgramARB(GLenum target, GLuint program_name) {
 
 void glProgramStringARB(GLenum target, GLenum format, GLsizei len, const void *string) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glProgramStringARB",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"format", (uint64_t)(uintptr_t)format},
-                                                       {"len", (uint64_t)(uintptr_t)len},
-                                                       {"string", (uint64_t)(uintptr_t)string}},
-                        4u);
     struct mgl_arb_program *program;
     struct mgl_arb_translation translation;
     char *source;
@@ -1111,12 +1100,6 @@ void glProgramEnvParameter4dARB(GLenum target, GLuint index, GLdouble x, GLdoubl
 void glProgramEnvParameters4fvEXT(GLenum target, GLuint index, GLsizei count,
                                   const GLfloat *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glProgramEnvParameters4fvEXT",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"index", (uint64_t)(uintptr_t)index},
-                                                       {"count", (uint64_t)(uintptr_t)count},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     GLfloat(*env)[4];
     size_t parameter_count;
     if (ctx == NULL)
@@ -1219,12 +1202,6 @@ void glProgramLocalParameter4dARB(GLenum target, GLuint index, GLdouble x, GLdou
 void glProgramLocalParameters4fvEXT(GLenum target, GLuint index, GLsizei count,
                                     const GLfloat *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glProgramLocalParameters4fvEXT",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"index", (uint64_t)(uintptr_t)index},
-                                                       {"count", (uint64_t)(uintptr_t)count},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     GLfloat(*local)[4];
     size_t parameter_count;
     if (ctx == NULL)
@@ -1355,11 +1332,6 @@ static GLint arb_program_attribute_limit(struct mgl_context *ctx) {
 
 void glGetProgramivARB(GLenum target, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetProgramivARB",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_arb_program *program;
     if (ctx == NULL)
         return;
@@ -1479,11 +1451,6 @@ void glGetProgramivARB(GLenum target, GLenum pname, GLint *params) {
 
 void glGetProgramStringARB(GLenum target, GLenum pname, void *string) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetProgramStringARB",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"string", (uint64_t)(uintptr_t)string}},
-                        3u);
     struct mgl_arb_program *program;
     if (ctx == NULL)
         return;

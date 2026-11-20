@@ -494,10 +494,6 @@ void glBindSamplers(GLuint first, GLsizei count, const GLuint *samplers) {
 void glSamplerParameterf(GLuint sampler, GLenum pname, GLfloat param) {
     struct mgl_context *ctx = mgl_context_current();
     mark_sampler_fallback_dirty(ctx);
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glSamplerParameterf",
-                        (const struct mgl_error_arg[]){{"sampler", (uint64_t)(uintptr_t)sampler},
-                                                       {"pname", (uint64_t)(uintptr_t)pname}},
-                        2u);
     struct mgl_sampler *s;
     if (ctx == NULL)
         return;
@@ -526,11 +522,6 @@ void glSamplerParameterf(GLuint sampler, GLenum pname, GLfloat param) {
 void glSamplerParameteri(GLuint sampler, GLenum pname, GLint param) {
     struct mgl_context *ctx = mgl_context_current();
     mark_sampler_fallback_dirty(ctx);
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glSamplerParameteri",
-                        (const struct mgl_error_arg[]){{"sampler", (uint64_t)(uintptr_t)sampler},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"param", (uint64_t)(uintptr_t)param}},
-                        3u);
     struct mgl_sampler *s;
     GLfloat f = (GLfloat)param;
     if (ctx == NULL)
@@ -558,11 +549,6 @@ void glSamplerParameteri(GLuint sampler, GLenum pname, GLint param) {
 void glSamplerParameterfv(GLuint sampler, GLenum pname, const GLfloat *params) {
     struct mgl_context *ctx = mgl_context_current();
     mark_sampler_fallback_dirty(ctx);
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glSamplerParameterfv",
-                        (const struct mgl_error_arg[]){{"sampler", (uint64_t)(uintptr_t)sampler},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_sampler *s;
     if (ctx == NULL)
         return;
@@ -662,11 +648,6 @@ void glSamplerParameterIuiv(GLuint sampler, GLenum pname, const GLuint *params) 
 
 void glGetSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetSamplerParameterfv",
-                        (const struct mgl_error_arg[]){{"sampler", (uint64_t)(uintptr_t)sampler},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_sampler *s;
     if (ctx == NULL)
         return;
@@ -693,11 +674,6 @@ static GLint sampler_lod_to_int(GLfloat value) {
 
 void glGetSamplerParameteriv(GLuint sampler, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetSamplerParameteriv",
-                        (const struct mgl_error_arg[]){{"sampler", (uint64_t)(uintptr_t)sampler},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_sampler *s;
     GLfloat f[4];
     unsigned i;

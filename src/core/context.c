@@ -821,6 +821,7 @@ int mgl_context_make_current(struct mgl_context *ctx) {
         tls_current_context = NULL;
         return 1;
     }
+    struct mgl_context *previous = tls_current_context;
     if (ctx->native_dispatch == NULL || ctx->native_dispatch->eglMakeCurrent == NULL) {
         return 0;
     }
@@ -828,10 +829,10 @@ int mgl_context_make_current(struct mgl_context *ctx) {
                                              ctx->egl_context) != MGL_EGL_TRUE) {
         return 0;
     }
+    tls_current_context = ctx;
     if (!ctx->native_gles32_verified) {
         GLint major_version = 0;
         GLint minor_version = 0;
-        struct mgl_context *previous = tls_current_context;
         if (ctx->native_dispatch->glesGetIntegerv != NULL) {
             ctx->native_dispatch->glesGetIntegerv(GL_MAJOR_VERSION, &major_version);
             ctx->native_dispatch->glesGetIntegerv(GL_MINOR_VERSION, &minor_version);
@@ -840,13 +841,15 @@ int mgl_context_make_current(struct mgl_context *ctx) {
             (void)fprintf(stderr, "mGL: OpenGL ES 3.2 required; native reported %d.%d\n",
                           major_version, minor_version);
             if (previous != NULL && previous != ctx && previous->native_dispatch != NULL &&
-                previous->native_dispatch->eglMakeCurrent != NULL) {
-                (void)previous->native_dispatch->eglMakeCurrent(
+                previous->native_dispatch->eglMakeCurrent != NULL &&
+                previous->native_dispatch->eglMakeCurrent(
                     previous->egl_display, previous->egl_draw, previous->egl_read,
-                    previous->egl_context);
+                    previous->egl_context) == MGL_EGL_TRUE) {
+                tls_current_context = previous;
             } else {
                 (void)ctx->native_dispatch->eglMakeCurrent(ctx->egl_display, MGL_EGL_NO_SURFACE,
                                                            MGL_EGL_NO_SURFACE, MGL_EGL_NO_CONTEXT);
+                tls_current_context = NULL;
             }
             return 0;
         }

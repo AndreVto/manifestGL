@@ -46,8 +46,6 @@ GLenum glGetError(void) {
 
 const GLubyte *glGetString(GLenum name) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetString",
-                        (const struct mgl_error_arg[]){{"name", (uint64_t)(uintptr_t)name}}, 1u);
     if (ctx == NULL)
         return NULL;
     if (ctx->immediate.active) {
@@ -85,10 +83,6 @@ const GLubyte *glGetString(GLenum name) {
 
 const GLubyte *glGetStringi(GLenum name, GLuint index) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetStringi",
-                        (const struct mgl_error_arg[]){{"name", (uint64_t)(uintptr_t)name},
-                                                       {"index", (uint64_t)(uintptr_t)index}},
-                        2u);
     const GLubyte *extension;
     if (ctx == NULL)
         return NULL;

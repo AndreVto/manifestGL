@@ -299,9 +299,7 @@ static void realize_one_texture_binding(struct mgl_context *ctx, unsigned unit,
         mgl_native_select_active_texture(ctx, GL_TEXTURE0 + unit);
         *active_unit = unit;
     }
-    mgl_render_diag_native_check(ctx, "before_glesBindTexture", (uint64_t)target, (uint64_t)name);
     ctx->native_dispatch->glesBindTexture(target, name);
-    mgl_render_diag_native_check(ctx, "glesBindTexture", (uint64_t)target, (uint64_t)name);
     ctx->native_texture_names[unit][target_index] = name;
     ctx->native_texture_known[unit] |= bit;
 }
@@ -541,8 +539,6 @@ static void refresh_one_framebuffer_attachment(struct mgl_context *ctx, GLenum a
         ctx->native_dispatch->glesFramebufferTexture2D(GL_FRAMEBUFFER, attachment,
                                                        mgl_texture_native_target(textarget),
                                                        native_texture, level);
-    mgl_render_diag_native_check(ctx, "glesFramebufferAttachment", (uint64_t)attachment,
-                                 (uint64_t)native_texture);
 }
 
 static void refresh_framebuffers_for_texture(struct mgl_context *ctx,

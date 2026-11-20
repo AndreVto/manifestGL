@@ -24,6 +24,8 @@ sh tools/build_android_arm64.sh all
 | `all` | Prepare dependencies, build libraries, and package |
 | `clean` | Remove the configured build directory |
 
+The `android` and `all` targets generate `src/native/dispatch_trace.generated.inc` from the GLES dispatch declarations before invoking CMake.
+
 ## Build outputs
 
 The default staging directory is `build-android-arm64/output/`:

@@ -104,9 +104,7 @@ static void lower_draw_buffers_for_framebuffer(struct mgl_context *ctx, int defa
         translated = buffers[0] == GL_NONE
                          ? GL_NONE
                          : (ctx->native_default_framebuffer ? GL_COLOR_ATTACHMENT0 : GL_BACK);
-        mgl_render_diag_native_check(ctx, "before_glesDrawBuffers", 1u, (uint64_t)translated);
         ctx->native_dispatch->glesDrawBuffers(1, &translated);
-        mgl_render_diag_native_check(ctx, "glesDrawBuffers", 1u, (uint64_t)translated);
         return;
     }
     {
@@ -116,11 +114,7 @@ static void lower_draw_buffers_for_framebuffer(struct mgl_context *ctx, int defa
                 return;
         }
     }
-    mgl_render_diag_native_check(ctx, "before_glesDrawBuffers", (uint64_t)n,
-                                 n > 0 ? (uint64_t)buffers[0] : 0u);
     ctx->native_dispatch->glesDrawBuffers(n, buffers);
-    mgl_render_diag_native_check(ctx, "glesDrawBuffers", (uint64_t)n,
-                                 n > 0 ? (uint64_t)buffers[0] : 0u);
 }
 
 static int routed_attach(struct mgl_context *ctx, GLenum attachment, GLuint texture,
@@ -458,11 +452,6 @@ static int named_framebuffer_default_parameter_valid(struct mgl_context *ctx, GL
 
 void glFramebufferParameteri(GLenum target, GLenum pname, GLint param) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glFramebufferParameteri",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"param", (uint64_t)(uintptr_t)param}},
-                        3u);
     struct mgl_framebuffer *fb;
     GLint *slot;
     if (ctx == NULL)
@@ -496,11 +485,6 @@ void glFramebufferParameteri(GLenum target, GLenum pname, GLint param) {
 
 void glGetFramebufferParameteriv(GLenum target, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetFramebufferParameteriv",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_framebuffer *fb;
     GLint *slot;
     if (ctx == NULL)
@@ -653,11 +637,6 @@ void glDeleteFramebuffers(GLsizei n, const GLuint *framebuffers) {
 void glBindFramebuffer(GLenum target, GLuint framebuffer) {
     struct mgl_context *ctx = mgl_context_current();
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_FRAMEBUFFER);
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glBindFramebuffer",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"framebuffer", (uint64_t)(uintptr_t)framebuffer}},
-        2u);
     struct mgl_framebuffer *obj = NULL;
     GLuint native_name = 0u;
     if (ctx == NULL)
@@ -691,11 +670,7 @@ void glBindFramebuffer(GLenum target, GLuint framebuffer) {
     else
         ctx->read_framebuffer = framebuffer;
     if (ctx->native_dispatch != NULL && ctx->native_dispatch->glesBindFramebuffer != NULL) {
-        mgl_render_diag_native_check(ctx, "before_glesBindFramebuffer", (uint64_t)target,
-                                     (uint64_t)native_name);
         ctx->native_dispatch->glesBindFramebuffer(target, native_name);
-        mgl_render_diag_native_check(ctx, "glesBindFramebuffer", (uint64_t)target,
-                                     (uint64_t)native_name);
         if (obj != NULL)
             (void)mgl_texture_refresh_framebuffer_attachments(ctx, obj);
     }
@@ -739,9 +714,6 @@ static void note_framebuffer_color_status(struct mgl_context *ctx, struct mgl_fr
 GLenum glCheckFramebufferStatus(GLenum target) {
     struct mgl_context *ctx = mgl_context_current();
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_FRAMEBUFFER);
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glCheckFramebufferStatus",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target}},
-                        1u);
     GLenum status;
     GLuint name;
     if (ctx == NULL)
@@ -765,8 +737,6 @@ GLenum glCheckFramebufferStatus(GLenum target) {
                                                                             : target);
         if (route > 0)
             mgl_framebuffer_draw_route_end(ctx);
-        mgl_render_diag_native_check(ctx, "glesCheckFramebufferStatus", (uint64_t)target,
-                                     (uint64_t)status);
         name = target == GL_READ_FRAMEBUFFER ? ctx->read_framebuffer : ctx->draw_framebuffer;
         if (name != 0u)
             note_framebuffer_color_status(ctx, mgl_framebuffer_find(ctx, name), status);
@@ -852,13 +822,6 @@ void glReadBuffer(GLenum src) {
 void glFramebufferRenderbuffer(GLenum target, GLenum attachment, GLenum renderbuffertarget,
                                GLuint renderbuffer) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glFramebufferRenderbuffer",
-                        (const struct mgl_error_arg[]){
-                            {"target", (uint64_t)(uintptr_t)target},
-                            {"attachment", (uint64_t)(uintptr_t)attachment},
-                            {"renderbuffertarget", (uint64_t)(uintptr_t)renderbuffertarget},
-                            {"renderbuffer", (uint64_t)(uintptr_t)renderbuffer}},
-                        4u);
     struct mgl_framebuffer *fb;
     struct mgl_renderbuffer *rb = NULL;
     GLuint native_rb = 0u;
@@ -922,12 +885,8 @@ void glFramebufferRenderbuffer(GLenum target, GLenum attachment, GLenum renderbu
         fb->stencil_texture_target = 0u;
     }
     if (ctx->native_dispatch != NULL && ctx->native_dispatch->glesFramebufferRenderbuffer != NULL) {
-        mgl_render_diag_native_check(ctx, "before_glesFramebufferRenderbuffer",
-                                     (uint64_t)attachment, (uint64_t)native_rb);
         ctx->native_dispatch->glesFramebufferRenderbuffer(target, attachment, GL_RENDERBUFFER,
                                                           native_rb);
-        mgl_render_diag_native_check(ctx, "glesFramebufferRenderbuffer", (uint64_t)attachment,
-                                     (uint64_t)native_rb);
     }
 }
 
@@ -1028,11 +987,6 @@ void glDeleteRenderbuffers(GLsizei n, const GLuint *renderbuffers) {
 
 void glBindRenderbuffer(GLenum target, GLuint renderbuffer) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glBindRenderbuffer",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"renderbuffer", (uint64_t)(uintptr_t)renderbuffer}},
-        2u);
     struct mgl_renderbuffer *obj = NULL;
     GLuint native_name = 0u;
     if (ctx == NULL)
@@ -1089,13 +1043,6 @@ GLboolean glIsRenderbuffer(GLuint renderbuffer) {
 
 void glRenderbufferStorage(GLenum target, GLenum internalformat, GLsizei width, GLsizei height) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glRenderbufferStorage",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height}},
-        4u);
     struct mgl_renderbuffer *obj;
     if (ctx == NULL)
         return;
@@ -1129,14 +1076,6 @@ void glRenderbufferStorage(GLenum target, GLenum internalformat, GLsizei width, 
 void glRenderbufferStorageMultisample(GLenum target, GLsizei samples, GLenum internalformat,
                                       GLsizei width, GLsizei height) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glRenderbufferStorageMultisample",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"samples", (uint64_t)(uintptr_t)samples},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height}},
-        5u);
     struct mgl_renderbuffer *obj;
     GLint actual_samples = samples;
     if (ctx == NULL)
@@ -1183,11 +1122,6 @@ void glRenderbufferStorageMultisample(GLenum target, GLsizei samples, GLenum int
 
 void glGetRenderbufferParameteriv(GLenum target, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetRenderbufferParameteriv",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_renderbuffer *obj;
     if (ctx == NULL || params == NULL)
         return;
@@ -1304,12 +1238,6 @@ static int mgl_current_draw_framebuffer_complete(struct mgl_context *ctx) {
 
 void glClearBufferiv(GLenum buffer, GLint drawbuffer, const GLint *value) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glClearBufferiv",
-        (const struct mgl_error_arg[]){{"buffer", (uint64_t)(uintptr_t)buffer},
-                                       {"drawbuffer", (uint64_t)(uintptr_t)drawbuffer},
-                                       {"value", (uint64_t)(uintptr_t)value}},
-        3u);
     unsigned count;
     if (ctx == NULL)
         return;
@@ -1350,12 +1278,6 @@ void glClearBufferiv(GLenum buffer, GLint drawbuffer, const GLint *value) {
 
 void glClearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint *value) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glClearBufferuiv",
-        (const struct mgl_error_arg[]){{"buffer", (uint64_t)(uintptr_t)buffer},
-                                       {"drawbuffer", (uint64_t)(uintptr_t)drawbuffer},
-                                       {"value", (uint64_t)(uintptr_t)value}},
-        3u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -1391,12 +1313,6 @@ void glClearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint *value) {
 
 void glClearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat *value) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glClearBufferfv",
-        (const struct mgl_error_arg[]){{"buffer", (uint64_t)(uintptr_t)buffer},
-                                       {"drawbuffer", (uint64_t)(uintptr_t)drawbuffer},
-                                       {"value", (uint64_t)(uintptr_t)value}},
-        3u);
     unsigned count;
     if (ctx == NULL)
         return;
@@ -1437,12 +1353,6 @@ void glClearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat *value) {
 
 void glClearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glClearBufferfi",
-        (const struct mgl_error_arg[]){{"buffer", (uint64_t)(uintptr_t)buffer},
-                                       {"drawbuffer", (uint64_t)(uintptr_t)drawbuffer},
-                                       {"stencil", (uint64_t)(uintptr_t)stencil}},
-        3u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -1524,13 +1434,6 @@ static int mgl_named_clear_begin(struct mgl_context *ctx, GLuint framebuffer,
 void glClearNamedFramebufferiv(GLuint framebuffer, GLenum buffer, GLint drawbuffer,
                                const GLint *value) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glClearNamedFramebufferiv",
-        (const struct mgl_error_arg[]){{"framebuffer", (uint64_t)(uintptr_t)framebuffer},
-                                       {"buffer", (uint64_t)(uintptr_t)buffer},
-                                       {"drawbuffer", (uint64_t)(uintptr_t)drawbuffer},
-                                       {"value", (uint64_t)(uintptr_t)value}},
-        4u);
     GLuint native_name;
     if (ctx == NULL)
         return;
@@ -1562,13 +1465,6 @@ void glClearNamedFramebufferiv(GLuint framebuffer, GLenum buffer, GLint drawbuff
 void glClearNamedFramebufferuiv(GLuint framebuffer, GLenum buffer, GLint drawbuffer,
                                 const GLuint *value) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glClearNamedFramebufferuiv",
-        (const struct mgl_error_arg[]){{"framebuffer", (uint64_t)(uintptr_t)framebuffer},
-                                       {"buffer", (uint64_t)(uintptr_t)buffer},
-                                       {"drawbuffer", (uint64_t)(uintptr_t)drawbuffer},
-                                       {"value", (uint64_t)(uintptr_t)value}},
-        4u);
     GLuint native_name;
     if (ctx == NULL)
         return;
@@ -1600,13 +1496,6 @@ void glClearNamedFramebufferuiv(GLuint framebuffer, GLenum buffer, GLint drawbuf
 void glClearNamedFramebufferfv(GLuint framebuffer, GLenum buffer, GLint drawbuffer,
                                const GLfloat *value) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glClearNamedFramebufferfv",
-        (const struct mgl_error_arg[]){{"framebuffer", (uint64_t)(uintptr_t)framebuffer},
-                                       {"buffer", (uint64_t)(uintptr_t)buffer},
-                                       {"drawbuffer", (uint64_t)(uintptr_t)drawbuffer},
-                                       {"value", (uint64_t)(uintptr_t)value}},
-        4u);
     GLuint native_name;
     if (ctx == NULL)
         return;
@@ -1638,13 +1527,6 @@ void glClearNamedFramebufferfv(GLuint framebuffer, GLenum buffer, GLint drawbuff
 void glClearNamedFramebufferfi(GLuint framebuffer, GLenum buffer, GLint drawbuffer, GLfloat depth,
                                GLint stencil) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glClearNamedFramebufferfi",
-        (const struct mgl_error_arg[]){{"framebuffer", (uint64_t)(uintptr_t)framebuffer},
-                                       {"buffer", (uint64_t)(uintptr_t)buffer},
-                                       {"drawbuffer", (uint64_t)(uintptr_t)drawbuffer},
-                                       {"stencil", (uint64_t)(uintptr_t)stencil}},
-        4u);
     GLuint native_name;
     if (ctx == NULL)
         return;
@@ -1720,11 +1602,6 @@ void glCreateFramebuffers(GLsizei n, GLuint *framebuffers) {
 
 GLenum glCheckNamedFramebufferStatus(GLuint framebuffer, GLenum target) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glCheckNamedFramebufferStatus",
-        (const struct mgl_error_arg[]){{"framebuffer", (uint64_t)(uintptr_t)framebuffer},
-                                       {"target", (uint64_t)(uintptr_t)target}},
-        2u);
     struct mgl_framebuffer *obj;
     GLenum status;
     if (ctx == NULL)
@@ -1975,12 +1852,6 @@ static int mgl_validate_invalidate_attachments(struct mgl_context *ctx,
 
 void glInvalidateFramebuffer(GLenum target, GLsizei numAttachments, const GLenum *attachments) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glInvalidateFramebuffer",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"numAttachments", (uint64_t)(uintptr_t)numAttachments},
-                                       {"attachments", (uint64_t)(uintptr_t)attachments}},
-        3u);
     GLuint bound;
     if (ctx == NULL)
         return;
@@ -2084,13 +1955,6 @@ void glInvalidateNamedFramebufferSubData(GLuint framebuffer, GLsizei numAttachme
 void glNamedFramebufferRenderbuffer(GLuint framebuffer, GLenum attachment,
                                     GLenum renderbuffertarget, GLuint renderbuffer) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glNamedFramebufferRenderbuffer",
-                        (const struct mgl_error_arg[]){
-                            {"framebuffer", (uint64_t)(uintptr_t)framebuffer},
-                            {"attachment", (uint64_t)(uintptr_t)attachment},
-                            {"renderbuffertarget", (uint64_t)(uintptr_t)renderbuffertarget},
-                            {"renderbuffer", (uint64_t)(uintptr_t)renderbuffer}},
-                        4u);
     struct mgl_framebuffer *fb;
     struct mgl_renderbuffer *rb = NULL;
     GLuint native_rb = 0u;
@@ -2277,13 +2141,6 @@ static int mgl_framebuffer_attachment_size_pname(GLenum pname) {
 void glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attachment, GLenum pname,
                                            GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glGetFramebufferAttachmentParameteriv",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"attachment", (uint64_t)(uintptr_t)attachment},
-                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                       {"params", (uint64_t)(uintptr_t)params}},
-        4u);
     struct mgl_framebuffer *fb;
     if (ctx == NULL || params == NULL)
         return;
@@ -2414,13 +2271,6 @@ void glCreateRenderbuffers(GLsizei n, GLuint *renderbuffers) {
 void glNamedRenderbufferStorage(GLuint renderbuffer, GLenum internalformat, GLsizei width,
                                 GLsizei height) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glNamedRenderbufferStorage",
-        (const struct mgl_error_arg[]){{"renderbuffer", (uint64_t)(uintptr_t)renderbuffer},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height}},
-        4u);
     struct mgl_renderbuffer *obj;
     GLuint restore;
     if (ctx == NULL)
@@ -2459,14 +2309,6 @@ void glNamedRenderbufferStorage(GLuint renderbuffer, GLenum internalformat, GLsi
 void glNamedRenderbufferStorageMultisample(GLuint renderbuffer, GLsizei samples,
                                            GLenum internalformat, GLsizei width, GLsizei height) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glNamedRenderbufferStorageMultisample",
-        (const struct mgl_error_arg[]){{"renderbuffer", (uint64_t)(uintptr_t)renderbuffer},
-                                       {"samples", (uint64_t)(uintptr_t)samples},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"width", (uint64_t)(uintptr_t)width},
-                                       {"height", (uint64_t)(uintptr_t)height}},
-        5u);
     struct mgl_renderbuffer *obj;
     GLuint restore;
     if (ctx == NULL)
@@ -2519,12 +2361,6 @@ void glNamedRenderbufferStorageMultisample(GLuint renderbuffer, GLsizei samples,
 
 void glGetNamedRenderbufferParameteriv(GLuint renderbuffer, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glGetNamedRenderbufferParameteriv",
-        (const struct mgl_error_arg[]){{"renderbuffer", (uint64_t)(uintptr_t)renderbuffer},
-                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                       {"params", (uint64_t)(uintptr_t)params}},
-        3u);
     struct mgl_renderbuffer *obj;
     if (ctx == NULL || params == NULL)
         return;

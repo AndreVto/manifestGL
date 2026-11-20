@@ -23,10 +23,7 @@ static inline void mgl_texture_bind_native(struct mgl_context *ctx, GLenum targe
     mgl_texture_mark_all_bindings_dirty(ctx);
     {
         MGL_DEEP_SCOPE(ctx, MGL_DEEP_GLES_BIND_TEXTURE);
-        mgl_render_diag_native_check(ctx, "before_glesBindTexture", (uint64_t)target,
-                                     (uint64_t)texture);
         ctx->native_dispatch->glesBindTexture(target, texture);
-        mgl_render_diag_native_check(ctx, "glesBindTexture", (uint64_t)target, (uint64_t)texture);
     }
 }
 
@@ -41,10 +38,7 @@ static inline void mgl_texture_bind_native_unit(struct mgl_context *ctx, GLenum 
         return;
     {
         MGL_DEEP_SCOPE(ctx, MGL_DEEP_GLES_BIND_TEXTURE);
-        mgl_render_diag_native_check(ctx, "before_glesBindTexture", (uint64_t)target,
-                                     (uint64_t)texture);
         ctx->native_dispatch->glesBindTexture(target, texture);
-        mgl_render_diag_native_check(ctx, "glesBindTexture", (uint64_t)target, (uint64_t)texture);
     }
     if (unit < mgl_programmable_texture_limit(ctx) && bit != 0u) {
         ctx->native_texture_names[unit][index] = texture;

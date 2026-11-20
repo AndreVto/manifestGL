@@ -21,8 +21,7 @@ void mgl_render_diag_detail(struct mgl_context *ctx, const char *operation, cons
                             uint64_t arg0, uint64_t arg1);
 void mgl_render_diag_skip(struct mgl_context *ctx, const char *operation, const char *reason,
                           uint64_t arg0, uint64_t arg1);
-void mgl_render_diag_native_check(struct mgl_context *ctx, const char *operation, uint64_t arg0,
-                                  uint64_t arg1);
+
 uint64_t mgl_perf_diag_now(void);
 /* Draw route: 0 = GPU-resident vertices and indices, 1 = packed staging,
  * 2 = GPU-resident vertices with client indices uploaded to a scratch EBO. */

@@ -11,6 +11,7 @@ struct mgl_native_dispatch {
     struct mgl_library system_vulkan_lib;
     int initialized;
     int available;
+    struct mgl_native_dispatch *trace_raw;
 
     MGL_EGLDisplay (*eglGetDisplay)(MGL_EGLNativeDisplayType);
     MGL_EGLBoolean (*eglInitialize)(MGL_EGLDisplay, MGL_EGLint *, MGL_EGLint *);

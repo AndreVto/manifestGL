@@ -369,6 +369,7 @@ build_mgl() {
     rm -f "$OUTPUT_DIR/.mgl-build-provenance" \
         "$OUTPUT_DIR/$PAYLOAD_NAME" "$OUTPUT_DIR/$EGL_PAYLOAD_NAME" \
         "$(component_archive)"
+    python3 "$ROOT/tools/generate_gles_trace.py"
     cmake -S "$ROOT" -B "$BUILD_DIR" \
         -DCMAKE_TOOLCHAIN_FILE="$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake" \
         -DANDROID_ABI=arm64-v8a \

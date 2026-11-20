@@ -1,5 +1,6 @@
 #include "native/dispatch.h"
 #include "core/context.h"
+#include "native/gles_trace.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -101,6 +102,16 @@ void *mgl_native_dispatch_resolve_gles(struct mgl_native_dispatch *native, const
 /* Canonical framebuffer zero maps to the GLES backing FBO, including during internal binding
  * restoration. */
 static struct mgl_native_dispatch *mgl_bind_native;
+
+static const struct mgl_native_dispatch *mgl_trace_current_raw(struct mgl_context *ctx) {
+    struct mgl_native_dispatch *native = ctx != NULL ? ctx->native_dispatch : mgl_bind_native;
+    return native != NULL ? native->trace_raw : NULL;
+}
+
+static GLenum mgl_trace_glesGetError(void) {
+    struct mgl_context *ctx = mgl_context_current();
+    return mgl_gles_trace_get_error(ctx, mgl_trace_current_raw(ctx));
+}
 
 static void mgl_bind_default_framebuffer(GLenum target, GLuint name) {
     struct mgl_context *ctx = mgl_context_current();
@@ -499,6 +510,8 @@ static void preload_android_vulkan(struct mgl_native_dispatch *b) {
 #endif
 }
 
+#include "native/dispatch_trace.generated.inc"
+
 int mgl_native_dispatch_init(struct mgl_native_dispatch *b) {
     if (b == NULL)
         return 0;
@@ -527,6 +540,14 @@ int mgl_native_dispatch_init(struct mgl_native_dispatch *b) {
     mgl_bind_native = b;
     b->glesBindFramebufferRaw = b->glesBindFramebuffer;
     b->glesBindFramebuffer = mgl_bind_default_framebuffer;
+    if (mgl_gles_trace_enabled()) {
+        if (!mgl_gles_trace_install(b)) {
+            mgl_native_dispatch_shutdown(b);
+            b->initialized = 1;
+            return 0;
+        }
+        b->glesGetError = mgl_trace_glesGetError;
+    }
     b->available = 1;
     return 1;
 }
@@ -536,6 +557,7 @@ void mgl_native_dispatch_shutdown(struct mgl_native_dispatch *b) {
         return;
     if (mgl_bind_native == b)
         mgl_bind_native = NULL;
+    free(b->trace_raw);
     mgl_library_close(&b->gles_lib);
     mgl_library_close(&b->egl_lib);
     mgl_library_close(&b->system_vulkan_lib);

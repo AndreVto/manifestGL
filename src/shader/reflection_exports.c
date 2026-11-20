@@ -240,11 +240,6 @@ void glShaderStorageBlockBinding(GLuint program_name, GLuint storageBlockIndex,
 
     if (ctx == NULL)
         return;
-    mgl_error_trace_api(&ctx->errors, "glShaderStorageBlockBinding",
-                        (const struct mgl_error_arg[]){{"program", program_name},
-                                                       {"index", storageBlockIndex},
-                                                       {"binding", storageBlockBinding}},
-                        3u);
     if (reflection_reject_inside_begin(ctx))
         return;
     (void)pthread_mutex_lock(&ctx->share_group->lock);
@@ -377,12 +372,6 @@ void glGetActiveAtomicCounterBufferiv(GLuint program_name, GLuint bufferIndex, G
     GLint count = 0;
     GLsizei result_count = 1;
 
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetActiveAtomicCounterBufferiv",
-                        (const struct mgl_error_arg[]){{"program_name", program_name},
-                                                       {"bufferIndex", bufferIndex},
-                                                       {"pname", pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     if (ctx == NULL)
         return;
     if (reflection_reject_inside_begin(ctx))
@@ -466,13 +455,6 @@ void glGetProgramResourceiv(GLuint program_name, GLenum programInterface, GLuint
 
     if (ctx == NULL)
         return;
-    mgl_error_trace_api(&ctx->errors, "glGetProgramResourceiv",
-                        (const struct mgl_error_arg[]){{"program", program_name},
-                                                       {"interface", programInterface},
-                                                       {"index", index},
-                                                       {"propCount", (uint64_t)(int64_t)propCount},
-                                                       {"bufSize", (uint64_t)(int64_t)bufSize}},
-                        5u);
     if (reflection_reject_inside_begin(ctx))
         return;
     if (propCount <= 0 || bufSize < 0 || props == NULL || (bufSize > 0 && params == NULL)) {

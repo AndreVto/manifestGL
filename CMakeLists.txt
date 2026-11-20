@@ -64,6 +64,7 @@ set(MGL_RUNTIME_SOURCES
     src/abi/proc_address.c
     src/abi/unimplemented_exports.c
     src/native/dispatch.c
+    src/native/gles_trace.c
     src/native/loader.c
     src/core/capabilities.c
     src/core/context.c
@@ -271,6 +272,10 @@ if(MGL_BUILD_TESTS)
     add_test(NAME bootstrap_smoke COMMAND mgl_bootstrap_smoke)
 
     find_package(Python3 QUIET COMPONENTS Interpreter)
+    if(Python3_Interpreter_FOUND)
+        add_test(NAME gles_trace_generated
+            COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tools/generate_gles_trace.py --check)
+    endif()
     function(mgl_add_internal_test target test_name source)
         add_executable(${target} ${source})
         target_include_directories(${target} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/src)

@@ -41,64 +41,28 @@ void mgl_error_init(struct mgl_error_state *state) {
         state->native_pending_count = 0u;
         state->suppress = GL_FALSE;
         state->diagnostic_context = NULL;
-        state->diagnostic_api = NULL;
-        state->pending_api = NULL;
-        state->diagnostic_arg_count = 0u;
-        memset(state->diagnostic_args, 0, sizeof(state->diagnostic_args));
     }
-}
-
-void mgl_error_trace_api(struct mgl_error_state *state, const char *api,
-                         const struct mgl_error_arg *args, unsigned count) {
-    if (state == NULL)
-        return;
-    state->diagnostic_api = api;
-    if (count > MGL_ERROR_TRACE_MAX_ARGS)
-        count = MGL_ERROR_TRACE_MAX_ARGS;
-    if (args == NULL)
-        count = 0u;
-    state->diagnostic_arg_count = count;
-    if (count != 0u)
-        memcpy(state->diagnostic_args, args, (size_t)count * sizeof(*args));
 }
 
 void mgl_error_set_at(struct mgl_error_state *state, GLenum error, const char *file, unsigned line,
                       const char *caller) {
-    unsigned i, arg_count;
     GLenum pending;
-    const char *api;
     if (state == NULL || state->suppress || error == GL_NO_ERROR)
         return;
     ++state->sequence;
     pending = state->pending;
-    api = state->diagnostic_api != NULL ? state->diagnostic_api : caller;
-    arg_count = state->diagnostic_arg_count;
-    if (caller != NULL && caller[0] == 'g' && caller[1] == 'l' &&
-        caller[2] >= 'A' && caller[2] <= 'Z' &&
-        (api == NULL || strcmp(caller, api) != 0)) {
-        api = caller;
-        arg_count = 0u;
-    }
-    if (pending == GL_NO_ERROR) {
+    if (pending == GL_NO_ERROR)
         state->pending = error;
-        state->pending_api = api;
-    }
     if (!reject_report(file, line, error))
         return;
     flockfile(stderr);
     (void)fprintf(stderr,
                   "mGL: error: pid=%ld thread=%lx ctx=%p event=interface_error_set "
-                  "error=%s(0x%x) api=%s setter=%s at=%s:%u pending=0x%x",
+                  "error=%s(0x%x) setter=%s at=%s:%u pending=0x%x\n",
                   (long)getpid(), (unsigned long)pthread_self(), state->diagnostic_context,
                   mgl_error_name(error), (unsigned)error,
-                  api != NULL ? api : "<untracked>",
                   caller != NULL ? caller : "<unknown>", file != NULL ? file : "<unknown>", line,
                   (unsigned)pending);
-    for (i = 0; i < arg_count; ++i) {
-        (void)fprintf(stderr, " %s=0x%llx", state->diagnostic_args[i].name,
-                      (unsigned long long)state->diagnostic_args[i].value);
-    }
-    (void)fputc('\n', stderr);
     funlockfile(stderr);
 }
 

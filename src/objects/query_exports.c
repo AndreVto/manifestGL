@@ -169,11 +169,6 @@ void glGenQueries(GLsizei n, GLuint *ids) {
 
 void glCreateQueries(GLenum target, GLsizei n, GLuint *ids) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glCreateQueries",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"n", (uint64_t)(uintptr_t)n},
-                                                       {"ids", (uint64_t)(uintptr_t)ids}},
-                        3u);
     GLsizei i;
     if (ctx == NULL)
         return;
@@ -424,10 +419,6 @@ void glEndQuery(GLenum target) {
 
 void glQueryCounter(GLuint id, GLenum target) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glQueryCounter",
-                        (const struct mgl_error_arg[]){{"id", (uint64_t)(uintptr_t)id},
-                                                       {"target", (uint64_t)(uintptr_t)target}},
-                        2u);
     struct mgl_query *q;
     if (ctx == NULL)
         return;
@@ -473,12 +464,6 @@ void glQueryCounter(GLuint id, GLenum target) {
 
 void glGetQueryIndexediv(GLenum target, GLuint index, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetQueryIndexediv",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"index", (uint64_t)(uintptr_t)index},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     struct mgl_query *q;
     if (ctx == NULL)
         return;

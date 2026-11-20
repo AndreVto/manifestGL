@@ -476,9 +476,7 @@ static inline void mgl_native_select_active_texture(struct mgl_context *ctx, GLe
     mgl_perf_diag_active_texture(ctx, 0);
     {
         MGL_DEEP_SCOPE(ctx, MGL_DEEP_GLES_ACTIVE_TEXTURE);
-        mgl_render_diag_native_check(ctx, "before_glesActiveTexture", (uint64_t)texture, 0u);
         ctx->native_dispatch->glesActiveTexture(texture);
-        mgl_render_diag_native_check(ctx, "glesActiveTexture", (uint64_t)texture, 0u);
     }
     ctx->native_active_texture = texture;
     ctx->native_active_texture_known = GL_TRUE;
@@ -577,9 +575,7 @@ static inline void mgl_draw_use_native_program(struct mgl_context *ctx, GLuint n
     if (ctx == NULL || ctx->native_dispatch == NULL || ctx->native_dispatch->glesUseProgram == NULL)
         return;
     if (!ctx->draw_native_program_valid || ctx->draw_native_program != name) {
-        mgl_render_diag_native_check(ctx, "before_glesUseProgram", (uint64_t)name, 0u);
         ctx->native_dispatch->glesUseProgram(name);
-        mgl_render_diag_native_check(ctx, "glesUseProgram", (uint64_t)name, 0u);
         ctx->draw_native_program = name;
         ctx->draw_native_program_valid = GL_TRUE;
     }

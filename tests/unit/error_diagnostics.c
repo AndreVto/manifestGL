@@ -2,6 +2,7 @@
 #include "core/context.h"
 #include "core/error.h"
 #include "core/render_diag.h"
+#include "native/gles_trace.h"
 #include "mgl/gl.h"
 
 #include <stdio.h>
@@ -41,7 +42,7 @@ int main(void) {
     ctx.native_dispatch = &native;
     native.glesGetError = fake_get_error;
     native.glesViewport = fake_viewport;
-    if (setenv("MGL_BACKEND_ERROR_CHECK", "1", 1) != 0)
+    if (unsetenv("MGL_GLES_TRACE") != 0)
         return 21;
     mgl_context_set_current_for_test(&ctx);
     log = tmpfile();
@@ -50,18 +51,16 @@ int main(void) {
     saved_fd = dup(fileno(stderr));
     if (saved_fd < 0 || dup2(fileno(log), fileno(stderr)) < 0)
         return 3;
-    mgl_error_trace_api(
-        &ctx.errors, "glTexImage2D",
-        (const struct mgl_error_arg[]){{"target", GL_TEXTURE_2D}, {"internalformat", GL_RGBA8}},
-        2u);
-    mgl_error_set_at(&ctx.errors, GL_INVALID_VALUE, "texture.c", 17u, "glTexImage2D");
-    mgl_error_set_at(&ctx.errors, GL_OUT_OF_MEMORY, "texture.c", 19u, "glTexImage2D");
-    if (ctx.errors.pending_api == NULL || strcmp(ctx.errors.pending_api, "glTexImage2D") != 0)
+    mgl_error_set_at(&ctx.errors, GL_INVALID_VALUE, "texture.c", 17u, "texture_upload");
+    mgl_error_set_at(&ctx.errors, GL_OUT_OF_MEMORY, "texture.c", 19u, "texture_upload");
+    if (setenv("MGL_GLES_TRACE", "all", 1) != 0)
         return 22;
     if (mgl_error_peek(&ctx.errors) != GL_INVALID_VALUE)
         return 4;
+    mgl_gles_trace_before(&ctx, &native, "glesBindTexture",
+                          (const uint64_t[]){GL_TEXTURE_2D, 3u}, 2u, NULL);
     native_error = GL_INVALID_OPERATION;
-    mgl_render_diag_native_check(&ctx, "glesBindTexture", GL_TEXTURE_2D, 3u);
+    mgl_gles_trace_after(&ctx, &native, "glesBindTexture");
     if (native_error != GL_NO_ERROR || ctx.errors.native_pending_count != 1u)
         return 5;
     if (glGetError() != GL_INVALID_VALUE)
@@ -73,12 +72,16 @@ int main(void) {
     native_error = GL_INVALID_ENUM;
     if (glGetError() != GL_INVALID_ENUM)
         return 17;
+    mgl_gles_trace_before(&ctx, &native, "glesDrawBuffers",
+                          (const uint64_t[]){4u, GL_COLOR_ATTACHMENT0}, 2u, NULL);
     native_error = GL_INVALID_VALUE;
-    mgl_render_diag_native_check(&ctx, "glesDrawBuffers", 4u, GL_COLOR_ATTACHMENT0);
+    mgl_gles_trace_after(&ctx, &native, "glesDrawBuffers");
     if (glGetError() != GL_INVALID_VALUE)
         return 18;
+    mgl_gles_trace_before(&ctx, &native, "glesUseProgram",
+                          (const uint64_t[]){2u, 0u}, 2u, NULL);
     native_error = GL_INVALID_OPERATION;
-    mgl_render_diag_native_check(&ctx, "glesUseProgram", 2u, 0u);
+    mgl_gles_trace_after(&ctx, &native, "glesUseProgram");
     if (native_error != GL_NO_ERROR || glGetError() != GL_INVALID_OPERATION)
         return 20;
     mgl_render_diag_skip(&ctx, "glDrawBuffers", "nonidentity_attachment", 1u, GL_COLOR_ATTACHMENT0);
@@ -112,16 +115,20 @@ int main(void) {
         return 11;
     if (strstr(output, "pending=0x501") == NULL)
         return 12;
-    if (strstr(output, "internalformat=0x8058") == NULL)
+    if (strstr(output, "setter=texture_upload at=texture.c:17") == NULL ||
+        strstr(output, "setter=texture_upload at=texture.c:19") == NULL)
         return 13;
-    if (strstr(output, "event=gles_reject operation=glesBindTexture error=GL_INVALID_OPERATION(0x502)") == NULL)
+    if (strstr(output, "event=gles_origin phase=generated_by_call native=glesBindTexture error=GL_INVALID_OPERATION(0x502)") == NULL)
         return 14;
-    if (strstr(output, "event=lowering_skip operation=glDrawBuffers") == NULL)
+    if (strstr(output, "mGL: warning:") == NULL ||
+        strstr(output, "event=lowering_skip operation=glDrawBuffers") == NULL)
         return 15;
     if (strstr(output, "mGL: error:") == NULL ||
-        strstr(output, "api=glViewportArrayv setter=validate_viewport_span") == NULL ||
-        strstr(output, "caused_by=glViewportArrayv") == NULL ||
-        strstr(output, "api=glPointSize setter=glPointSize") == NULL)
+        strstr(output, "setter=validate_viewport_span at=") == NULL ||
+        strstr(output, "setter=glPointSize at=") == NULL ||
+        strstr(output, "event=glGetError origin=interface error=GL_INVALID_VALUE(0x501)") == NULL ||
+        strstr(output, "caused_by=") != NULL ||
+        strstr(output, " api=") != NULL)
         return 24;
     mgl_context_set_current_for_test(NULL);
     return 0;

@@ -97,15 +97,6 @@ static void assign_data_ref(struct mgl_context *ctx, struct mgl_vertex_binding *
 void glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized,
                            GLsizei stride, const void *pointer) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glVertexAttribPointer",
-        (const struct mgl_error_arg[]){{"index", (uint64_t)(uintptr_t)index},
-                                       {"size", (uint64_t)(uintptr_t)size},
-                                       {"type", (uint64_t)(uintptr_t)type},
-                                       {"normalized", (uint64_t)(uintptr_t)normalized},
-                                       {"stride", (uint64_t)(uintptr_t)stride},
-                                       {"pointer", (uint64_t)(uintptr_t)pointer}},
-        6u);
     struct mgl_vertex_binding *binding;
     if (ctx == NULL)
         return;
@@ -155,13 +146,6 @@ void glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean norm
 void glVertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride,
                             const void *pointer) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glVertexAttribIPointer",
-                        (const struct mgl_error_arg[]){{"index", (uint64_t)(uintptr_t)index},
-                                                       {"size", (uint64_t)(uintptr_t)size},
-                                                       {"type", (uint64_t)(uintptr_t)type},
-                                                       {"stride", (uint64_t)(uintptr_t)stride},
-                                                       {"pointer", (uint64_t)(uintptr_t)pointer}},
-                        5u);
     struct mgl_vertex_binding *binding;
     if (ctx == NULL)
         return;
@@ -928,11 +912,6 @@ void glVertexAttribI4uiv(GLuint index, const GLuint *v) {
 
 void glGetVertexAttribiv(GLuint index, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetVertexAttribiv",
-                        (const struct mgl_error_arg[]){{"index", (uint64_t)(uintptr_t)index},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_vertex_binding *binding;
     if (ctx == NULL || params == NULL)
         return;
@@ -1101,11 +1080,6 @@ void glGetVertexAttribIuiv(GLuint index, GLenum pname, GLuint *params) {
 
 void glGetVertexAttribPointerv(GLuint index, GLenum pname, void **pointer) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetVertexAttribPointerv",
-                        (const struct mgl_error_arg[]){{"index", (uint64_t)(uintptr_t)index},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"pointer", (uint64_t)(uintptr_t)pointer}},
-                        3u);
     struct mgl_vertex_binding *binding;
     if (ctx == NULL || pointer == NULL)
         return;
@@ -1301,9 +1275,6 @@ void glGetVertexAttribPointervARB(GLuint index, GLenum pname, void **pointer) {
 
 void glClientActiveTexture(GLenum texture) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glClientActiveTexture",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture}},
-                        1u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -1336,12 +1307,6 @@ static void set_compat_pointer(struct mgl_context *ctx, unsigned semantic, GLint
 
 void glVertexPointer(GLint size, GLenum type, GLsizei stride, const void *pointer) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glVertexPointer",
-                        (const struct mgl_error_arg[]){{"size", (uint64_t)(uintptr_t)size},
-                                                       {"type", (uint64_t)(uintptr_t)type},
-                                                       {"stride", (uint64_t)(uintptr_t)stride},
-                                                       {"pointer", (uint64_t)(uintptr_t)pointer}},
-                        4u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -1367,11 +1332,6 @@ void glVertexPointer(GLint size, GLenum type, GLsizei stride, const void *pointe
 
 void glNormalPointer(GLenum type, GLsizei stride, const void *pointer) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glNormalPointer",
-                        (const struct mgl_error_arg[]){{"type", (uint64_t)(uintptr_t)type},
-                                                       {"stride", (uint64_t)(uintptr_t)stride},
-                                                       {"pointer", (uint64_t)(uintptr_t)pointer}},
-                        3u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -1394,12 +1354,6 @@ void glNormalPointer(GLenum type, GLsizei stride, const void *pointer) {
 
 void glColorPointer(GLint size, GLenum type, GLsizei stride, const void *pointer) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glColorPointer",
-                        (const struct mgl_error_arg[]){{"size", (uint64_t)(uintptr_t)size},
-                                                       {"type", (uint64_t)(uintptr_t)type},
-                                                       {"stride", (uint64_t)(uintptr_t)stride},
-                                                       {"pointer", (uint64_t)(uintptr_t)pointer}},
-                        4u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -1426,12 +1380,6 @@ void glColorPointer(GLint size, GLenum type, GLsizei stride, const void *pointer
 
 void glSecondaryColorPointer(GLint size, GLenum type, GLsizei stride, const void *pointer) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glSecondaryColorPointer",
-                        (const struct mgl_error_arg[]){{"size", (uint64_t)(uintptr_t)size},
-                                                       {"type", (uint64_t)(uintptr_t)type},
-                                                       {"stride", (uint64_t)(uintptr_t)stride},
-                                                       {"pointer", (uint64_t)(uintptr_t)pointer}},
-                        4u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -1458,11 +1406,6 @@ void glSecondaryColorPointer(GLint size, GLenum type, GLsizei stride, const void
 
 void glFogCoordPointer(GLenum type, GLsizei stride, const void *pointer) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glFogCoordPointer",
-                        (const struct mgl_error_arg[]){{"type", (uint64_t)(uintptr_t)type},
-                                                       {"stride", (uint64_t)(uintptr_t)stride},
-                                                       {"pointer", (uint64_t)(uintptr_t)pointer}},
-                        3u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -1484,12 +1427,6 @@ void glFogCoordPointer(GLenum type, GLsizei stride, const void *pointer) {
 
 void glTexCoordPointer(GLint size, GLenum type, GLsizei stride, const void *pointer) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTexCoordPointer",
-                        (const struct mgl_error_arg[]){{"size", (uint64_t)(uintptr_t)size},
-                                                       {"type", (uint64_t)(uintptr_t)type},
-                                                       {"stride", (uint64_t)(uintptr_t)stride},
-                                                       {"pointer", (uint64_t)(uintptr_t)pointer}},
-                        4u);
     unsigned semantic;
     if (ctx == NULL)
         return;
@@ -1518,13 +1455,6 @@ void glTexCoordPointer(GLint size, GLenum type, GLsizei stride, const void *poin
 void glMultiTexCoordPointerEXT(GLenum texunit, GLint size, GLenum type, GLsizei stride,
                                const void *pointer) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glMultiTexCoordPointerEXT",
-                        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                                       {"size", (uint64_t)(uintptr_t)size},
-                                                       {"type", (uint64_t)(uintptr_t)type},
-                                                       {"stride", (uint64_t)(uintptr_t)stride},
-                                                       {"pointer", (uint64_t)(uintptr_t)pointer}},
-                        5u);
     GLuint saved_unit;
     GLuint unit;
     if (ctx == NULL)
@@ -1704,11 +1634,6 @@ static const void *interleaved_pointer_offset(const void *pointer, size_t offset
 
 void glInterleavedArrays(GLenum format, GLsizei stride, const void *pointer) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glInterleavedArrays",
-                        (const struct mgl_error_arg[]){{"format", (uint64_t)(uintptr_t)format},
-                                                       {"stride", (uint64_t)(uintptr_t)stride},
-                                                       {"pointer", (uint64_t)(uintptr_t)pointer}},
-                        3u);
     struct mgl_interleaved_layout layout;
     struct mgl_vertex_binding *texcoord;
     struct mgl_vertex_binding *color;
@@ -1910,8 +1835,6 @@ MGL_EXPORT void glIndexPointer(GLenum type, GLsizei stride, const void *pointer)
 
 void glEnableClientState(GLenum array) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glEnableClientState",
-                        (const struct mgl_error_arg[]){{"array", (uint64_t)(uintptr_t)array}}, 1u);
     struct mgl_vertex_binding *binding;
     if (ctx == NULL)
         return;
@@ -1929,8 +1852,6 @@ void glEnableClientState(GLenum array) {
 
 void glDisableClientState(GLenum array) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glDisableClientState",
-                        (const struct mgl_error_arg[]){{"array", (uint64_t)(uintptr_t)array}}, 1u);
     struct mgl_vertex_binding *binding;
     if (ctx == NULL)
         return;
@@ -2044,11 +1965,6 @@ void glDisableVertexArrayEXT(GLuint vaobj, GLenum array) {
 
 void glGetPointerIndexedv(GLenum pname, GLuint index, void **params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetPointerIndexedv",
-                        (const struct mgl_error_arg[]){{"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"index", (uint64_t)(uintptr_t)index},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     const struct mgl_vertex_binding *binding;
     if (ctx == NULL)
         return;

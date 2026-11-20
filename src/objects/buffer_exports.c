@@ -492,10 +492,6 @@ void glDeleteBuffers(GLsizei n, const GLuint *buffers) {
 void glBindBuffer(GLenum target, GLuint buffer) {
     struct mgl_context *ctx = mgl_context_current();
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_BUFFER_STATE);
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glBindBuffer",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"buffer", (uint64_t)(uintptr_t)buffer}},
-                        2u);
     GLuint *slot;
     GLuint native_name = 0u;
     struct mgl_buffer *obj = NULL;
@@ -650,12 +646,6 @@ static void buffer_storage_allocate(struct mgl_context *ctx, struct mgl_buffer *
 
 void glBufferStorage(GLenum target, GLsizeiptr size, const void *data, GLbitfield flags) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glBufferStorage",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"size", (uint64_t)(uintptr_t)size},
-                                                       {"data", (uint64_t)(uintptr_t)data},
-                                                       {"flags", (uint64_t)(uintptr_t)flags}},
-                        4u);
     struct mgl_buffer *obj;
     if (ctx == NULL)
         return;
@@ -681,12 +671,6 @@ void glBufferData(GLenum target, GLsizeiptr size, const void *data, GLenum usage
     struct mgl_context *ctx = mgl_context_current();
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_BUFFER_STATE);
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_BUFFER_DATA);
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glBufferData",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"size", (uint64_t)(uintptr_t)size},
-                                                       {"data", (uint64_t)(uintptr_t)data},
-                                                       {"usage", (uint64_t)(uintptr_t)usage}},
-                        4u);
     struct mgl_buffer *obj;
     unsigned char *replacement = NULL;
     if (ctx == NULL)
@@ -763,12 +747,6 @@ void glBufferData(GLenum target, GLsizeiptr size, const void *data, GLenum usage
 
 void glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glBufferSubData",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"offset", (uint64_t)(uintptr_t)offset},
-                                                       {"size", (uint64_t)(uintptr_t)size},
-                                                       {"data", (uint64_t)(uintptr_t)data}},
-                        4u);
     struct mgl_buffer *obj;
     size_t off, len;
     if (ctx == NULL)
@@ -974,12 +952,6 @@ void glClearNamedBufferSubData(GLuint buffer, GLenum internalformat, GLintptr of
 
 void glGetBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, void *data) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetBufferSubData",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"offset", (uint64_t)(uintptr_t)offset},
-                                                       {"size", (uint64_t)(uintptr_t)size},
-                                                       {"data", (uint64_t)(uintptr_t)data}},
-                        4u);
     struct mgl_buffer *obj;
     size_t off, len;
     if (ctx == NULL)
@@ -1031,12 +1003,6 @@ static void *buffer_map_native(struct mgl_context *ctx, struct mgl_buffer *obj, 
 
 void *glMapBufferRange(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glMapBufferRange",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"offset", (uint64_t)(uintptr_t)offset},
-                                                       {"length", (uint64_t)(uintptr_t)length},
-                                                       {"access", (uint64_t)(uintptr_t)access}},
-                        4u);
     struct mgl_buffer *obj;
     size_t off, len;
     if (ctx == NULL)
@@ -1088,10 +1054,6 @@ void *glMapBufferRange(GLenum target, GLintptr offset, GLsizeiptr length, GLbitf
 
 void *glMapBuffer(GLenum target, GLenum access) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glMapBuffer",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"access", (uint64_t)(uintptr_t)access}},
-                        2u);
     struct mgl_buffer *obj;
     GLbitfield bits;
     if (ctx == NULL)
@@ -1130,11 +1092,6 @@ void *glMapBuffer(GLenum target, GLenum access) {
 
 void glFlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeiptr length) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glFlushMappedBufferRange",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"offset", (uint64_t)(uintptr_t)offset},
-                                                       {"length", (uint64_t)(uintptr_t)length}},
-                        3u);
     struct mgl_buffer *obj;
     size_t off, len;
     if (ctx == NULL)
@@ -1192,9 +1149,6 @@ void glFlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeiptr length)
 
 GLboolean glUnmapBuffer(GLenum target) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glUnmapBuffer",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target}},
-                        1u);
     struct mgl_buffer *obj;
     if (ctx == NULL)
         return GL_FALSE;
@@ -1248,11 +1202,6 @@ GLboolean glUnmapBuffer(GLenum target) {
 
 void glGetBufferParameteriv(GLenum target, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetBufferParameteriv",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_buffer *obj;
     if (ctx == NULL || params == NULL)
         return;
@@ -1312,11 +1261,6 @@ void glGetBufferParameteriv(GLenum target, GLenum pname, GLint *params) {
 
 void glGetBufferParameteri64v(GLenum target, GLenum pname, GLint64 *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetBufferParameteri64v",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_buffer *obj;
     if (ctx == NULL || params == NULL)
         return;
@@ -1353,11 +1297,6 @@ void glGetBufferParameteri64v(GLenum target, GLenum pname, GLint64 *params) {
 
 void glGetBufferPointerv(GLenum target, GLenum pname, void **params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetBufferPointerv",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_buffer *obj;
     if (ctx == NULL || params == NULL)
         return;
@@ -1382,14 +1321,6 @@ void glGetBufferPointerv(GLenum target, GLenum pname, void **params) {
 void glCopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintptr readOffset,
                          GLintptr writeOffset, GLsizeiptr size) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glCopyBufferSubData",
-        (const struct mgl_error_arg[]){{"readTarget", (uint64_t)(uintptr_t)readTarget},
-                                       {"writeTarget", (uint64_t)(uintptr_t)writeTarget},
-                                       {"readOffset", (uint64_t)(uintptr_t)readOffset},
-                                       {"writeOffset", (uint64_t)(uintptr_t)writeOffset},
-                                       {"size", (uint64_t)(uintptr_t)size}},
-        5u);
     struct mgl_buffer *src;
     struct mgl_buffer *dst;
     size_t roff, woff, len;
@@ -1503,11 +1434,6 @@ static struct mgl_indexed_buffer_binding *indexed_binding_slot(struct mgl_contex
 
 void glBindBufferBase(GLenum target, GLuint index, GLuint buffer) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glBindBufferBase",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"index", (uint64_t)(uintptr_t)index},
-                                                       {"buffer", (uint64_t)(uintptr_t)buffer}},
-                        3u);
     struct mgl_indexed_buffer_binding *slot;
     struct mgl_buffer *obj = NULL;
     GLuint native_name = 0u;
@@ -1551,13 +1477,6 @@ void glBindBufferBase(GLenum target, GLuint index, GLuint buffer) {
 void glBindBufferRange(GLenum target, GLuint index, GLuint buffer, GLintptr offset,
                        GLsizeiptr size) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glBindBufferRange",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"index", (uint64_t)(uintptr_t)index},
-                                                       {"buffer", (uint64_t)(uintptr_t)buffer},
-                                                       {"offset", (uint64_t)(uintptr_t)offset},
-                                                       {"size", (uint64_t)(uintptr_t)size}},
-                        5u);
     struct mgl_indexed_buffer_binding *slot;
     struct mgl_buffer *obj = NULL;
     GLuint native_name = 0u;
@@ -1647,12 +1566,6 @@ static int existing_buffer_info(struct mgl_context *ctx, GLuint name, GLuint *na
 
 void glBindBuffersBase(GLenum target, GLuint first, GLsizei count, const GLuint *buffers) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glBindBuffersBase",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"first", (uint64_t)(uintptr_t)first},
-                                                       {"count", (uint64_t)(uintptr_t)count},
-                                                       {"buffers", (uint64_t)(uintptr_t)buffers}},
-                        4u);
     GLsizei i;
     if (ctx == NULL)
         return;
@@ -1693,14 +1606,6 @@ void glBindBuffersBase(GLenum target, GLuint first, GLsizei count, const GLuint 
 void glBindBuffersRange(GLenum target, GLuint first, GLsizei count, const GLuint *buffers,
                         const GLintptr *offsets, const GLsizeiptr *sizes) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glBindBuffersRange",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"first", (uint64_t)(uintptr_t)first},
-                                                       {"count", (uint64_t)(uintptr_t)count},
-                                                       {"buffers", (uint64_t)(uintptr_t)buffers},
-                                                       {"offsets", (uint64_t)(uintptr_t)offsets},
-                                                       {"sizes", (uint64_t)(uintptr_t)sizes}},
-                        6u);
     GLsizei i;
     if (ctx == NULL)
         return;
@@ -1826,12 +1731,6 @@ void glCreateBuffers(GLsizei n, GLuint *buffers) {
 
 void glNamedBufferData(GLuint buffer, GLsizeiptr size, const void *data, GLenum usage) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glNamedBufferData",
-                        (const struct mgl_error_arg[]){{"buffer", (uint64_t)(uintptr_t)buffer},
-                                                       {"size", (uint64_t)(uintptr_t)size},
-                                                       {"data", (uint64_t)(uintptr_t)data},
-                                                       {"usage", (uint64_t)(uintptr_t)usage}},
-                        4u);
     struct mgl_buffer *obj;
     unsigned char *replacement = NULL;
     if (ctx == NULL)
@@ -2013,10 +1912,6 @@ void *glMapNamedBufferRange(GLuint buffer, GLintptr offset, GLsizeiptr length, G
 
 void *glMapNamedBuffer(GLuint buffer, GLenum access) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glMapNamedBuffer",
-                        (const struct mgl_error_arg[]){{"buffer", (uint64_t)(uintptr_t)buffer},
-                                                       {"access", (uint64_t)(uintptr_t)access}},
-                        2u);
     struct mgl_buffer *obj;
     GLbitfield bits;
     if (ctx == NULL)
@@ -2135,11 +2030,6 @@ GLboolean glUnmapNamedBuffer(GLuint buffer) {
 
 void glGetNamedBufferParameteriv(GLuint buffer, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetNamedBufferParameteriv",
-                        (const struct mgl_error_arg[]){{"buffer", (uint64_t)(uintptr_t)buffer},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_buffer *obj;
     if (ctx == NULL || params == NULL)
         return;
@@ -2219,11 +2109,6 @@ void glGetNamedBufferParameteri64v(GLuint buffer, GLenum pname, GLint64 *params)
 
 void glGetNamedBufferPointerv(GLuint buffer, GLenum pname, void **params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetNamedBufferPointerv",
-                        (const struct mgl_error_arg[]){{"buffer", (uint64_t)(uintptr_t)buffer},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_buffer *obj;
     if (ctx == NULL || params == NULL)
         return;

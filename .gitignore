@@ -12,3 +12,4 @@ CMakeUserPresets.json
 *.log
 .vscode/
 .idea/
+src/native/dispatch_trace.generated.inc

@@ -3,6 +3,7 @@
 ## Host suite
 
 ```sh
+python3 tools/generate_gles_trace.py
 cmake -S . -B build-host \
   -DMGL_BUILD_TESTS=ON \
   -DMGL_WARNINGS_AS_ERRORS=ON

@@ -1029,14 +1029,6 @@ void glGetInternalformativ(GLenum target, GLenum internalformat, GLenum pname, G
     struct mgl_context *ctx = mgl_context_current();
     struct mgl_internalformat_info info;
     int supported;
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glGetInternalformativ",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                       {"bufSize", (uint64_t)(uintptr_t)bufSize},
-                                       {"params", (uint64_t)(uintptr_t)params}},
-        5u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -1087,14 +1079,6 @@ void glGetInternalformati64v(GLenum target, GLenum internalformat, GLenum pname,
     GLint *values;
     GLint count = 0;
     GLsizei size, i;
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glGetInternalformati64v",
-        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                       {"internalformat", (uint64_t)(uintptr_t)internalformat},
-                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                       {"bufSize", (uint64_t)(uintptr_t)bufSize},
-                                       {"params", (uint64_t)(uintptr_t)params}},
-        5u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {

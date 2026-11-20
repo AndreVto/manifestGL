@@ -67,11 +67,6 @@ static struct mgl_sync *require_sync(struct mgl_context *ctx, GLsync handle) {
 
 GLsync glFenceSync(GLenum condition, GLbitfield flags) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glFenceSync",
-        (const struct mgl_error_arg[]){{"condition", (uint64_t)(uintptr_t)condition},
-                                       {"flags", (uint64_t)(uintptr_t)flags}},
-        2u);
     struct mgl_sync *sync;
     if (ctx == NULL)
         return NULL;
@@ -192,13 +187,6 @@ void glWaitSync(GLsync handle, GLbitfield flags, GLuint64 timeout) {
 
 void glGetSynciv(GLsync handle, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *values) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetSynciv",
-                        (const struct mgl_error_arg[]){{"handle", (uint64_t)(uintptr_t)handle},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"bufSize", (uint64_t)(uintptr_t)bufSize},
-                                                       {"length", (uint64_t)(uintptr_t)length},
-                                                       {"values", (uint64_t)(uintptr_t)values}},
-                        5u);
     struct mgl_sync *sync;
     GLint value;
     if (ctx == NULL)

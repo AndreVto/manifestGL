@@ -4657,11 +4657,6 @@ GLuint glGenLists(GLsizei range) {
 
 void glNewList(GLuint list_name, GLenum mode) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(
-        ctx != NULL ? &ctx->errors : NULL, "glNewList",
-        (const struct mgl_error_arg[]){{"list_name", (uint64_t)(uintptr_t)list_name},
-                                       {"mode", (uint64_t)(uintptr_t)mode}},
-        2u);
     struct mgl_display_list *list;
     if (ctx == NULL)
         return;
@@ -4784,11 +4779,6 @@ void glListBase(GLuint base) {
 void glCallLists(GLsizei n, GLenum type, const void *lists) {
     struct mgl_context *ctx = mgl_context_current();
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_LIST_REPLAY);
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glCallLists",
-                        (const struct mgl_error_arg[]){{"n", (uint64_t)(uintptr_t)n},
-                                                       {"type", (uint64_t)(uintptr_t)type},
-                                                       {"lists", (uint64_t)(uintptr_t)lists}},
-                        3u);
     struct mgl_list_command command;
     GLuint *offsets = NULL;
     GLsizei i;

@@ -330,9 +330,6 @@ void glActiveTexture(GLenum texture) {
     struct mgl_context *ctx = mgl_context_current();
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_TEXTURE_STATE);
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_ACTIVE_TEXTURE);
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glActiveTexture",
-                        (const struct mgl_error_arg[]){{"texture", (uint64_t)(uintptr_t)texture}},
-                        1u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -481,8 +478,6 @@ static int mgl_texenv_get(const struct mgl_context *ctx, unsigned unit, GLenum p
 
 void glFogf(GLenum pname, GLfloat param) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glFogf",
-                        (const struct mgl_error_arg[]){{"pname", (uint64_t)(uintptr_t)pname}}, 1u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -633,7 +628,6 @@ void glTexEnvfv(GLenum target, GLenum pname, const GLfloat *params) {
     struct mgl_context *ctx = mgl_context_current();
     if (ctx == NULL || params == NULL)
         return;
-    mgl_error_trace_api(&ctx->errors, "glTexEnvfv", NULL, 0u);
     if (ctx->immediate.active) {
         if (ctx->compiling_list != NULL && !ctx->list_replaying &&
             mgl_list_record_tex_env(ctx, target, pname, params))
@@ -851,8 +845,6 @@ static int matrix_reject_inside_begin(struct mgl_context *ctx) {
 void glMatrixMode(GLenum mode) {
     struct mgl_context *ctx = mgl_context_current();
     MGL_DEEP_SCOPE(ctx, MGL_DEEP_GL_MATRIX);
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glMatrixMode",
-                        (const struct mgl_error_arg[]){{"mode", (uint64_t)(uintptr_t)mode}}, 1u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -1844,10 +1836,7 @@ void mgl_compat_realize_program_uniforms(struct mgl_context *ctx, struct mgl_pro
         }
         if (cache == NULL || !cache->lod_bias_valid ||
             memcmp(cache->effective_lod_bias, biases, sizeof(biases)) != 0) {
-            (ctx->native_dispatch->glesUniform1fv(program->compat_env_lod_bias, 8, biases),
-             mgl_render_diag_native_check(ctx, "Uniform1fv:compat_env_lod_bias",
-                                          (uint64_t)(program->compat_env_lod_bias),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1fv(program->compat_env_lod_bias, 8, biases);
             if (cache != NULL) {
                 memcpy(cache->effective_lod_bias, biases, sizeof(biases));
                 cache->lod_bias_valid = GL_TRUE;
@@ -1875,9 +1864,6 @@ void mgl_compat_realize_program_uniforms(struct mgl_context *ctx, struct mgl_pro
                  memcmp(cache->rect_scale[unit], scale[unit], sizeof(scale[unit])) != 0)) {
                 ctx->native_dispatch->glesUniform2f(program->compat_uniform_rect_scale[unit],
                                                     scale[unit][0], scale[unit][1]);
-                mgl_render_diag_native_check(ctx, "Uniform2f:compat_uniform_rect_scale",
-                                             (uint64_t)program->compat_uniform_rect_scale[unit],
-                                             (uint64_t)program->native_name);
             }
         }
         if (cache != NULL) {
@@ -1893,37 +1879,24 @@ void mgl_compat_realize_program_uniforms(struct mgl_context *ctx, struct mgl_pro
         if (program->compat_uniform_model_view_projection >= 0 &&
             ctx->native_dispatch->glesUniformMatrix4fv != NULL) {
             mgl_compat_mvp(&ctx->compat, mvp);
-            (ctx->native_dispatch->glesUniformMatrix4fv(
-                 program->compat_uniform_model_view_projection, 1, GL_FALSE, mvp),
-             mgl_render_diag_native_check(ctx,
-                                          "UniformMatrix4fv:compat_uniform_model_view_projection",
-                                          (uint64_t)(program->compat_uniform_model_view_projection),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniformMatrix4fv(
+                 program->compat_uniform_model_view_projection, 1, GL_FALSE, mvp);
         }
         if (program->compat_uniform_model_view >= 0 &&
             ctx->native_dispatch->glesUniformMatrix4fv != NULL)
-            (ctx->native_dispatch->glesUniformMatrix4fv(program->compat_uniform_model_view, 1,
+            ctx->native_dispatch->glesUniformMatrix4fv(program->compat_uniform_model_view, 1,
                                                         GL_FALSE,
-                                                        mgl_compat_modelview(&ctx->compat)),
-             mgl_render_diag_native_check(ctx, "UniformMatrix4fv:compat_uniform_model_view",
-                                          (uint64_t)(program->compat_uniform_model_view),
-                                          (uint64_t)program->native_name));
+                                                        mgl_compat_modelview(&ctx->compat));
         if (program->compat_uniform_projection >= 0 &&
             ctx->native_dispatch->glesUniformMatrix4fv != NULL)
-            (ctx->native_dispatch->glesUniformMatrix4fv(program->compat_uniform_projection, 1,
+            ctx->native_dispatch->glesUniformMatrix4fv(program->compat_uniform_projection, 1,
                                                         GL_FALSE,
-                                                        mgl_compat_projection(&ctx->compat)),
-             mgl_render_diag_native_check(ctx, "UniformMatrix4fv:compat_uniform_projection",
-                                          (uint64_t)(program->compat_uniform_projection),
-                                          (uint64_t)program->native_name));
+                                                        mgl_compat_projection(&ctx->compat));
         if (program->compat_uniform_normal_matrix >= 0 &&
             ctx->native_dispatch->glesUniformMatrix3fv != NULL) {
             mgl_compat_normal_matrix(&ctx->compat, normal);
-            (ctx->native_dispatch->glesUniformMatrix3fv(program->compat_uniform_normal_matrix, 1,
-                                                        GL_FALSE, normal),
-             mgl_render_diag_native_check(ctx, "UniformMatrix3fv:compat_uniform_normal_matrix",
-                                          (uint64_t)(program->compat_uniform_normal_matrix),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniformMatrix3fv(program->compat_uniform_normal_matrix, 1,
+                                                        GL_FALSE, normal);
         }
     }
     if (texture_matrices_dirty && ctx->native_dispatch->glesUniformMatrix4fv != NULL)
@@ -1932,82 +1905,51 @@ void mgl_compat_realize_program_uniforms(struct mgl_context *ctx, struct mgl_pro
                 (first ||
                  memcmp(mgl_compat_texture_matrix(old, texture_unit),
                         mgl_compat_texture_matrix(now, texture_unit), 16u * sizeof(GLfloat)) != 0))
-                (ctx->native_dispatch->glesUniformMatrix4fv(
+                ctx->native_dispatch->glesUniformMatrix4fv(
                      program->compat_uniform_texture_matrix[texture_unit], 1, GL_FALSE,
-                     mgl_compat_texture_matrix(now, texture_unit)),
-                 mgl_render_diag_native_check(
-                     ctx, "UniformMatrix4fv:compat_uniform_texture_matrix[texture_unit]",
-                     (uint64_t)(program->compat_uniform_texture_matrix[texture_unit]),
-                     (uint64_t)program->native_name));
+                     mgl_compat_texture_matrix(now, texture_unit));
     if (first && program->compat_uniform_sampler0 >= 0 &&
         ctx->native_dispatch->glesUniform1i != NULL)
-        (ctx->native_dispatch->glesUniform1i(program->compat_uniform_sampler0, 0),
-         mgl_render_diag_native_check(ctx, "Uniform1i:compat_uniform_sampler0",
-                                      (uint64_t)(program->compat_uniform_sampler0),
-                                      (uint64_t)program->native_name));
+        ctx->native_dispatch->glesUniform1i(program->compat_uniform_sampler0, 0);
     if (alpha_dirty) {
         if (program->compat_uniform_alpha_enabled >= 0 &&
             ctx->native_dispatch->glesUniform1i != NULL)
-            (ctx->native_dispatch->glesUniform1i(program->compat_uniform_alpha_enabled,
-                                                 ctx->canonical_state.alpha_test ? 1 : 0),
-             mgl_render_diag_native_check(ctx, "Uniform1i:compat_uniform_alpha_enabled",
-                                          (uint64_t)(program->compat_uniform_alpha_enabled),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1i(program->compat_uniform_alpha_enabled,
+                                                 ctx->canonical_state.alpha_test ? 1 : 0);
         if (program->compat_uniform_alpha_func >= 0 && ctx->native_dispatch->glesUniform1i != NULL)
-            (ctx->native_dispatch->glesUniform1i(program->compat_uniform_alpha_func,
-                                                 (GLint)ctx->canonical_state.alpha_func),
-             mgl_render_diag_native_check(ctx, "Uniform1i:compat_uniform_alpha_func",
-                                          (uint64_t)(program->compat_uniform_alpha_func),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1i(program->compat_uniform_alpha_func,
+                                                 (GLint)ctx->canonical_state.alpha_func);
         if (program->compat_uniform_alpha_ref >= 0 && ctx->native_dispatch->glesUniform1f != NULL)
-            (ctx->native_dispatch->glesUniform1f(program->compat_uniform_alpha_ref,
-                                                 ctx->canonical_state.alpha_ref),
-             mgl_render_diag_native_check(ctx, "Uniform1f:compat_uniform_alpha_ref",
-                                          (uint64_t)(program->compat_uniform_alpha_ref),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1f(program->compat_uniform_alpha_ref,
+                                                 ctx->canonical_state.alpha_ref);
     }
     if (point_dirty) {
         if (program->compat_uniform_program_point_size >= 0 &&
             ctx->native_dispatch->glesUniform1i != NULL)
-            (ctx->native_dispatch->glesUniform1i(
+            ctx->native_dispatch->glesUniform1i(
                  program->compat_uniform_program_point_size,
-                 ctx->canonical_state.program_point_size_enabled ? 1 : 0),
-             mgl_render_diag_native_check(ctx, "Uniform1i:compat_uniform_program_point_size",
-                                          (uint64_t)(program->compat_uniform_program_point_size),
-                                          (uint64_t)program->native_name));
+                 ctx->canonical_state.program_point_size_enabled ? 1 : 0);
         if (program->compat_uniform_point_size >= 0 && ctx->native_dispatch->glesUniform1f != NULL)
-            (ctx->native_dispatch->glesUniform1f(program->compat_uniform_point_size,
-                                                 ctx->canonical_state.point_size),
-             mgl_render_diag_native_check(ctx, "Uniform1f:compat_uniform_point_size",
-                                          (uint64_t)(program->compat_uniform_point_size),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1f(program->compat_uniform_point_size,
+                                                 ctx->canonical_state.point_size);
         if (program->compat_uniform_point_coord_flip >= 0 &&
             ctx->native_dispatch->glesUniform1i != NULL)
-            (ctx->native_dispatch->glesUniform1i(
+            ctx->native_dispatch->glesUniform1i(
                  program->compat_uniform_point_coord_flip,
                  ctx->canonical_state.point_sprite_enabled &&
                          ctx->canonical_state.point_sprite_coord_origin == GL_LOWER_LEFT
                      ? 1
-                     : 0),
-             mgl_render_diag_native_check(ctx, "Uniform1i:compat_uniform_point_coord_flip",
-                                          (uint64_t)(program->compat_uniform_point_coord_flip),
-                                          (uint64_t)program->native_name));
+                     : 0);
     }
     if (texenv_dirty && program->compat_uniform_ff_texture_enabled >= 0 &&
         ctx->native_dispatch->glesUniform1i != NULL)
-        (ctx->native_dispatch->glesUniform1i(
+        ctx->native_dispatch->glesUniform1i(
              program->compat_uniform_ff_texture_enabled,
-             mgl_compat_selected_texture_target(&ctx->compat, 0u) != 0u ? 1 : 0),
-         mgl_render_diag_native_check(ctx, "Uniform1i:compat_uniform_ff_texture_enabled",
-                                      (uint64_t)(program->compat_uniform_ff_texture_enabled),
-                                      (uint64_t)program->native_name));
+             mgl_compat_selected_texture_target(&ctx->compat, 0u) != 0u ? 1 : 0);
     if (texenv_dirty && program->compat_uniform_texture_env_mode0 >= 0 &&
         ctx->native_dispatch->glesUniform1i != NULL)
-        (ctx->native_dispatch->glesUniform1i(program->compat_uniform_texture_env_mode0,
-                                             (GLint)ctx->compat.texture_env_mode[0]),
-         mgl_render_diag_native_check(ctx, "Uniform1i:compat_uniform_texture_env_mode0",
-                                      (uint64_t)(program->compat_uniform_texture_env_mode0),
-                                      (uint64_t)program->native_name));
+        ctx->native_dispatch->glesUniform1i(program->compat_uniform_texture_env_mode0,
+                                             (GLint)ctx->compat.texture_env_mode[0]);
     if (texenv_dirty && program->compat_env_enabled >= 0 &&
         ctx->native_dispatch->glesUniform1iv != NULL &&
         ctx->native_dispatch->glesUniform4fv != NULL &&
@@ -2035,9 +1977,7 @@ void mgl_compat_realize_program_uniforms(struct mgl_context *ctx, struct mgl_pro
         }
 #define MGL_ENV_INT(field, value, count)                                                           \
     if (program->field >= 0)                                                                       \
-    (ctx->native_dispatch->glesUniform1iv(program->field, (count), (value)),                       \
-     mgl_render_diag_native_check(ctx, "Uniform1iv:" #field, (uint64_t)(program->field),           \
-                                  (uint64_t)program->native_name))
+    (ctx->native_dispatch->glesUniform1iv(program->field, (count), (value)))
         MGL_ENV_INT(compat_env_enabled, enabled, 8);
         MGL_ENV_INT(compat_env_mode, mode, 8);
         MGL_ENV_INT(compat_env_rgb_mode, rgb_mode, 8);
@@ -2048,29 +1988,17 @@ void mgl_compat_realize_program_uniforms(struct mgl_context *ctx, struct mgl_pro
         MGL_ENV_INT(compat_env_alpha_operand, alpha_op, 24);
 #undef MGL_ENV_INT
         if (program->compat_env_color >= 0)
-            (ctx->native_dispatch->glesUniform4fv(program->compat_env_color, 8, color),
-             mgl_render_diag_native_check(ctx, "Uniform4fv:compat_env_color",
-                                          (uint64_t)(program->compat_env_color),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform4fv(program->compat_env_color, 8, color);
         if (program->compat_env_rgb_scale >= 0)
-            (ctx->native_dispatch->glesUniform1fv(program->compat_env_rgb_scale, 8, rgb_scale),
-             mgl_render_diag_native_check(ctx, "Uniform1fv:compat_env_rgb_scale",
-                                          (uint64_t)(program->compat_env_rgb_scale),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1fv(program->compat_env_rgb_scale, 8, rgb_scale);
         if (program->compat_env_alpha_scale >= 0)
-            (ctx->native_dispatch->glesUniform1fv(program->compat_env_alpha_scale, 8, alpha_scale),
-             mgl_render_diag_native_check(ctx, "Uniform1fv:compat_env_alpha_scale",
-                                          (uint64_t)(program->compat_env_alpha_scale),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1fv(program->compat_env_alpha_scale, 8, alpha_scale);
     }
     if (first && ctx->native_dispatch->glesUniform1i != NULL) {
         for (texture_unit = 0; texture_unit < 8; ++texture_unit)
             if (program->compat_env_sampler[texture_unit] >= 0)
-                (ctx->native_dispatch->glesUniform1i(program->compat_env_sampler[texture_unit],
-                                                     (GLint)texture_unit),
-                 mgl_render_diag_native_check(ctx, "Uniform1i:compat_env_sampler[texture_unit]",
-                                              (uint64_t)(program->compat_env_sampler[texture_unit]),
-                                              (uint64_t)program->native_name));
+                ctx->native_dispatch->glesUniform1i(program->compat_env_sampler[texture_unit],
+                                                     (GLint)texture_unit);
     }
 
     if (implicit_texgen_dirty) {
@@ -2091,37 +2019,22 @@ void mgl_compat_realize_program_uniforms(struct mgl_context *ctx, struct mgl_pro
         }
         if (program->compat_uniform_implicit_texgen_enabled >= 0 &&
             ctx->native_dispatch->glesUniform1iv != NULL)
-            (ctx->native_dispatch->glesUniform1iv(program->compat_uniform_implicit_texgen_enabled,
-                                                  MGL_TEXTURE_UNITS * MGL_TEXGEN_COORDS, enabled),
-             mgl_render_diag_native_check(
-                 ctx, "Uniform1iv:compat_uniform_implicit_texgen_enabled",
-                 (uint64_t)(program->compat_uniform_implicit_texgen_enabled),
-                 (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1iv(program->compat_uniform_implicit_texgen_enabled,
+                                                  MGL_TEXTURE_UNITS * MGL_TEXGEN_COORDS, enabled);
         if (program->compat_uniform_implicit_texgen_mode >= 0 &&
             ctx->native_dispatch->glesUniform1iv != NULL)
-            (ctx->native_dispatch->glesUniform1iv(program->compat_uniform_implicit_texgen_mode,
-                                                  MGL_TEXTURE_UNITS * MGL_TEXGEN_COORDS, modes),
-             mgl_render_diag_native_check(ctx, "Uniform1iv:compat_uniform_implicit_texgen_mode",
-                                          (uint64_t)(program->compat_uniform_implicit_texgen_mode),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1iv(program->compat_uniform_implicit_texgen_mode,
+                                                  MGL_TEXTURE_UNITS * MGL_TEXGEN_COORDS, modes);
         if (program->compat_uniform_implicit_texgen_object_plane >= 0 &&
             ctx->native_dispatch->glesUniform4fv != NULL)
-            (ctx->native_dispatch->glesUniform4fv(
+            ctx->native_dispatch->glesUniform4fv(
                  program->compat_uniform_implicit_texgen_object_plane,
-                 MGL_TEXTURE_UNITS * MGL_TEXGEN_COORDS, object_planes),
-             mgl_render_diag_native_check(
-                 ctx, "Uniform4fv:compat_uniform_implicit_texgen_object_plane",
-                 (uint64_t)(program->compat_uniform_implicit_texgen_object_plane),
-                 (uint64_t)program->native_name));
+                 MGL_TEXTURE_UNITS * MGL_TEXGEN_COORDS, object_planes);
         if (program->compat_uniform_implicit_texgen_eye_plane >= 0 &&
             ctx->native_dispatch->glesUniform4fv != NULL)
-            (ctx->native_dispatch->glesUniform4fv(program->compat_uniform_implicit_texgen_eye_plane,
+            ctx->native_dispatch->glesUniform4fv(program->compat_uniform_implicit_texgen_eye_plane,
                                                   MGL_TEXTURE_UNITS * MGL_TEXGEN_COORDS,
-                                                  eye_planes),
-             mgl_render_diag_native_check(
-                 ctx, "Uniform4fv:compat_uniform_implicit_texgen_eye_plane",
-                 (uint64_t)(program->compat_uniform_implicit_texgen_eye_plane),
-                 (uint64_t)program->native_name));
+                                                  eye_planes);
     }
     if (texgen_dirty && program->compat_uniform_texgen_enabled >= 0) {
         GLint enabled[MGL_TEXGEN_COORDS];
@@ -2137,32 +2050,19 @@ void mgl_compat_realize_program_uniforms(struct mgl_context *ctx, struct mgl_pro
             memcpy(eye_plane + i * 4u, ctx->compat.texgen[0][i].eye_plane, 4u * sizeof(GLfloat));
         }
         if (ctx->native_dispatch->glesUniform1iv != NULL) {
-            (ctx->native_dispatch->glesUniform1iv(program->compat_uniform_texgen_enabled,
-                                                  MGL_TEXGEN_COORDS, enabled),
-             mgl_render_diag_native_check(ctx, "Uniform1iv:compat_uniform_texgen_enabled",
-                                          (uint64_t)(program->compat_uniform_texgen_enabled),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1iv(program->compat_uniform_texgen_enabled,
+                                                  MGL_TEXGEN_COORDS, enabled);
             if (program->compat_uniform_texgen_mode >= 0)
-                (ctx->native_dispatch->glesUniform1iv(program->compat_uniform_texgen_mode,
-                                                      MGL_TEXGEN_COORDS, modes),
-                 mgl_render_diag_native_check(ctx, "Uniform1iv:compat_uniform_texgen_mode",
-                                              (uint64_t)(program->compat_uniform_texgen_mode),
-                                              (uint64_t)program->native_name));
+                ctx->native_dispatch->glesUniform1iv(program->compat_uniform_texgen_mode,
+                                                      MGL_TEXGEN_COORDS, modes);
         }
         if (ctx->native_dispatch->glesUniform4fv != NULL) {
             if (program->compat_uniform_texgen_object_plane >= 0)
-                (ctx->native_dispatch->glesUniform4fv(program->compat_uniform_texgen_object_plane,
-                                                      MGL_TEXGEN_COORDS, object_plane),
-                 mgl_render_diag_native_check(
-                     ctx, "Uniform4fv:compat_uniform_texgen_object_plane",
-                     (uint64_t)(program->compat_uniform_texgen_object_plane),
-                     (uint64_t)program->native_name));
+                ctx->native_dispatch->glesUniform4fv(program->compat_uniform_texgen_object_plane,
+                                                      MGL_TEXGEN_COORDS, object_plane);
             if (program->compat_uniform_texgen_eye_plane >= 0)
-                (ctx->native_dispatch->glesUniform4fv(program->compat_uniform_texgen_eye_plane,
-                                                      MGL_TEXGEN_COORDS, eye_plane),
-                 mgl_render_diag_native_check(ctx, "Uniform4fv:compat_uniform_texgen_eye_plane",
-                                              (uint64_t)(program->compat_uniform_texgen_eye_plane),
-                                              (uint64_t)program->native_name));
+                ctx->native_dispatch->glesUniform4fv(program->compat_uniform_texgen_eye_plane,
+                                                      MGL_TEXGEN_COORDS, eye_plane);
         }
     }
     if (clip_dirty && program->compat_uniform_clip_enabled >= 0) {
@@ -2174,74 +2074,44 @@ void mgl_compat_realize_program_uniforms(struct mgl_context *ctx, struct mgl_pro
             memcpy(planes + i * 4u, ctx->compat.clip_plane[i], 4u * sizeof(GLfloat));
         }
         if (ctx->native_dispatch->glesUniform1iv != NULL)
-            (ctx->native_dispatch->glesUniform1iv(program->compat_uniform_clip_enabled,
-                                                  MGL_MAX_CLIP_PLANES, enabled),
-             mgl_render_diag_native_check(ctx, "Uniform1iv:compat_uniform_clip_enabled",
-                                          (uint64_t)(program->compat_uniform_clip_enabled),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1iv(program->compat_uniform_clip_enabled,
+                                                  MGL_MAX_CLIP_PLANES, enabled);
         if (program->compat_uniform_clip_plane >= 0 && ctx->native_dispatch->glesUniform4fv != NULL)
-            (ctx->native_dispatch->glesUniform4fv(program->compat_uniform_clip_plane,
-                                                  MGL_MAX_CLIP_PLANES, planes),
-             mgl_render_diag_native_check(ctx, "Uniform4fv:compat_uniform_clip_plane",
-                                          (uint64_t)(program->compat_uniform_clip_plane),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform4fv(program->compat_uniform_clip_plane,
+                                                  MGL_MAX_CLIP_PLANES, planes);
     }
     if (fog_dirty) {
         if (program->compat_uniform_fog_enabled >= 0 && ctx->native_dispatch->glesUniform1i != NULL)
-            (ctx->native_dispatch->glesUniform1i(program->compat_uniform_fog_enabled,
-                                                 ctx->compat.fog_enabled ? 1 : 0),
-             mgl_render_diag_native_check(ctx, "Uniform1i:compat_uniform_fog_enabled",
-                                          (uint64_t)(program->compat_uniform_fog_enabled),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1i(program->compat_uniform_fog_enabled,
+                                                 ctx->compat.fog_enabled ? 1 : 0);
         if (program->compat_uniform_fog_mode >= 0 && ctx->native_dispatch->glesUniform1i != NULL)
-            (ctx->native_dispatch->glesUniform1i(program->compat_uniform_fog_mode,
-                                                 (GLint)ctx->compat.fog_mode),
-             mgl_render_diag_native_check(ctx, "Uniform1i:compat_uniform_fog_mode",
-                                          (uint64_t)(program->compat_uniform_fog_mode),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1i(program->compat_uniform_fog_mode,
+                                                 (GLint)ctx->compat.fog_mode);
         if (program->compat_uniform_fog_density >= 0 && ctx->native_dispatch->glesUniform1f != NULL)
-            (ctx->native_dispatch->glesUniform1f(program->compat_uniform_fog_density,
-                                                 ctx->compat.fog_density),
-             mgl_render_diag_native_check(ctx, "Uniform1f:compat_uniform_fog_density",
-                                          (uint64_t)(program->compat_uniform_fog_density),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1f(program->compat_uniform_fog_density,
+                                                 ctx->compat.fog_density);
         if (program->compat_uniform_fog_start >= 0 && ctx->native_dispatch->glesUniform1f != NULL)
-            (ctx->native_dispatch->glesUniform1f(program->compat_uniform_fog_start,
-                                                 ctx->compat.fog_start),
-             mgl_render_diag_native_check(ctx, "Uniform1f:compat_uniform_fog_start",
-                                          (uint64_t)(program->compat_uniform_fog_start),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1f(program->compat_uniform_fog_start,
+                                                 ctx->compat.fog_start);
         if (program->compat_uniform_fog_end >= 0 && ctx->native_dispatch->glesUniform1f != NULL)
-            (ctx->native_dispatch->glesUniform1f(program->compat_uniform_fog_end,
-                                                 ctx->compat.fog_end),
-             mgl_render_diag_native_check(ctx, "Uniform1f:compat_uniform_fog_end",
-                                          (uint64_t)(program->compat_uniform_fog_end),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1f(program->compat_uniform_fog_end,
+                                                 ctx->compat.fog_end);
         if (program->compat_uniform_fog_color >= 0 && ctx->native_dispatch->glesUniform4f != NULL)
-            (ctx->native_dispatch->glesUniform4f(
+            ctx->native_dispatch->glesUniform4f(
                  program->compat_uniform_fog_color, ctx->compat.fog_color[0],
-                 ctx->compat.fog_color[1], ctx->compat.fog_color[2], ctx->compat.fog_color[3]),
-             mgl_render_diag_native_check(ctx, "Uniform4f:compat_uniform_fog_color",
-                                          (uint64_t)(program->compat_uniform_fog_color),
-                                          (uint64_t)program->native_name));
+                 ctx->compat.fog_color[1], ctx->compat.fog_color[2], ctx->compat.fog_color[3]);
         if (program->compat_uniform_fog_coord_explicit >= 0 &&
             ctx->native_dispatch->glesUniform1i != NULL)
-            (ctx->native_dispatch->glesUniform1i(program->compat_uniform_fog_coord_explicit,
+            ctx->native_dispatch->glesUniform1i(program->compat_uniform_fog_coord_explicit,
                                                  ctx->compat.fog_coord_source == GL_FOG_COORD ? 1
-                                                                                              : 0),
-             mgl_render_diag_native_check(ctx, "Uniform1i:compat_uniform_fog_coord_explicit",
-                                          (uint64_t)(program->compat_uniform_fog_coord_explicit),
-                                          (uint64_t)program->native_name));
+                                                                                              : 0);
     }
     if (lights_dirty) {
         if (program->compat_uniform_normalize_enabled >= 0 &&
             ctx->native_dispatch->glesUniform1i != NULL)
-            (ctx->native_dispatch->glesUniform1i(
+            ctx->native_dispatch->glesUniform1i(
                  program->compat_uniform_normalize_enabled,
-                 (ctx->compat.normalize_enabled || ctx->compat.rescale_normal_enabled) ? 1 : 0),
-             mgl_render_diag_native_check(ctx, "Uniform1i:compat_uniform_normalize_enabled",
-                                          (uint64_t)(program->compat_uniform_normalize_enabled),
-                                          (uint64_t)program->native_name));
+                 (ctx->compat.normalize_enabled || ctx->compat.rescale_normal_enabled) ? 1 : 0);
         if (program->compat_uniform_light_enabled >= 0) {
             GLint enabled[MGL_MAX_LIGHTS];
             GLfloat ambient[MGL_MAX_LIGHTS * 4u], diffuse[MGL_MAX_LIGHTS * 4u],
@@ -2268,213 +2138,119 @@ void mgl_compat_realize_program_uniforms(struct mgl_context *ctx, struct mgl_pro
                 att_quad[i] = l->quadratic_attenuation;
             }
             if (ctx->native_dispatch->glesUniform1iv != NULL)
-                (ctx->native_dispatch->glesUniform1iv(program->compat_uniform_light_enabled,
-                                                      MGL_MAX_LIGHTS, enabled),
-                 mgl_render_diag_native_check(ctx, "Uniform1iv:compat_uniform_light_enabled",
-                                              (uint64_t)(program->compat_uniform_light_enabled),
-                                              (uint64_t)program->native_name));
+                ctx->native_dispatch->glesUniform1iv(program->compat_uniform_light_enabled,
+                                                      MGL_MAX_LIGHTS, enabled);
             if (program->compat_uniform_light_ambient >= 0 &&
                 ctx->native_dispatch->glesUniform4fv != NULL)
-                (ctx->native_dispatch->glesUniform4fv(program->compat_uniform_light_ambient,
-                                                      MGL_MAX_LIGHTS, ambient),
-                 mgl_render_diag_native_check(ctx, "Uniform4fv:compat_uniform_light_ambient",
-                                              (uint64_t)(program->compat_uniform_light_ambient),
-                                              (uint64_t)program->native_name));
+                ctx->native_dispatch->glesUniform4fv(program->compat_uniform_light_ambient,
+                                                      MGL_MAX_LIGHTS, ambient);
             if (program->compat_uniform_light_diffuse >= 0 &&
                 ctx->native_dispatch->glesUniform4fv != NULL)
-                (ctx->native_dispatch->glesUniform4fv(program->compat_uniform_light_diffuse,
-                                                      MGL_MAX_LIGHTS, diffuse),
-                 mgl_render_diag_native_check(ctx, "Uniform4fv:compat_uniform_light_diffuse",
-                                              (uint64_t)(program->compat_uniform_light_diffuse),
-                                              (uint64_t)program->native_name));
+                ctx->native_dispatch->glesUniform4fv(program->compat_uniform_light_diffuse,
+                                                      MGL_MAX_LIGHTS, diffuse);
             if (program->compat_uniform_light_specular >= 0 &&
                 ctx->native_dispatch->glesUniform4fv != NULL)
-                (ctx->native_dispatch->glesUniform4fv(program->compat_uniform_light_specular,
-                                                      MGL_MAX_LIGHTS, specular),
-                 mgl_render_diag_native_check(ctx, "Uniform4fv:compat_uniform_light_specular",
-                                              (uint64_t)(program->compat_uniform_light_specular),
-                                              (uint64_t)program->native_name));
+                ctx->native_dispatch->glesUniform4fv(program->compat_uniform_light_specular,
+                                                      MGL_MAX_LIGHTS, specular);
             if (program->compat_uniform_light_position >= 0 &&
                 ctx->native_dispatch->glesUniform4fv != NULL)
-                (ctx->native_dispatch->glesUniform4fv(program->compat_uniform_light_position,
-                                                      MGL_MAX_LIGHTS, position),
-                 mgl_render_diag_native_check(ctx, "Uniform4fv:compat_uniform_light_position",
-                                              (uint64_t)(program->compat_uniform_light_position),
-                                              (uint64_t)program->native_name));
+                ctx->native_dispatch->glesUniform4fv(program->compat_uniform_light_position,
+                                                      MGL_MAX_LIGHTS, position);
             if (program->compat_uniform_light_spot_direction >= 0 &&
                 ctx->native_dispatch->glesUniform3fv != NULL)
-                (ctx->native_dispatch->glesUniform3fv(program->compat_uniform_light_spot_direction,
-                                                      MGL_MAX_LIGHTS, spot_dir),
-                 mgl_render_diag_native_check(
-                     ctx, "Uniform3fv:compat_uniform_light_spot_direction",
-                     (uint64_t)(program->compat_uniform_light_spot_direction),
-                     (uint64_t)program->native_name));
+                ctx->native_dispatch->glesUniform3fv(program->compat_uniform_light_spot_direction,
+                                                      MGL_MAX_LIGHTS, spot_dir);
             if (program->compat_uniform_light_spot_exponent >= 0 &&
                 ctx->native_dispatch->glesUniform1fv != NULL)
-                (ctx->native_dispatch->glesUniform1fv(program->compat_uniform_light_spot_exponent,
-                                                      MGL_MAX_LIGHTS, spot_exp),
-                 mgl_render_diag_native_check(
-                     ctx, "Uniform1fv:compat_uniform_light_spot_exponent",
-                     (uint64_t)(program->compat_uniform_light_spot_exponent),
-                     (uint64_t)program->native_name));
+                ctx->native_dispatch->glesUniform1fv(program->compat_uniform_light_spot_exponent,
+                                                      MGL_MAX_LIGHTS, spot_exp);
             if (program->compat_uniform_light_spot_cutoff >= 0 &&
                 ctx->native_dispatch->glesUniform1fv != NULL)
-                (ctx->native_dispatch->glesUniform1fv(program->compat_uniform_light_spot_cutoff,
-                                                      MGL_MAX_LIGHTS, spot_cutoff),
-                 mgl_render_diag_native_check(ctx, "Uniform1fv:compat_uniform_light_spot_cutoff",
-                                              (uint64_t)(program->compat_uniform_light_spot_cutoff),
-                                              (uint64_t)program->native_name));
+                ctx->native_dispatch->glesUniform1fv(program->compat_uniform_light_spot_cutoff,
+                                                      MGL_MAX_LIGHTS, spot_cutoff);
             if (program->compat_uniform_light_constant_attenuation >= 0 &&
                 ctx->native_dispatch->glesUniform1fv != NULL)
-                (ctx->native_dispatch->glesUniform1fv(
-                     program->compat_uniform_light_constant_attenuation, MGL_MAX_LIGHTS, att_const),
-                 mgl_render_diag_native_check(
-                     ctx, "Uniform1fv:compat_uniform_light_constant_attenuation",
-                     (uint64_t)(program->compat_uniform_light_constant_attenuation),
-                     (uint64_t)program->native_name));
+                ctx->native_dispatch->glesUniform1fv(
+                     program->compat_uniform_light_constant_attenuation, MGL_MAX_LIGHTS, att_const);
             if (program->compat_uniform_light_linear_attenuation >= 0 &&
                 ctx->native_dispatch->glesUniform1fv != NULL)
-                (ctx->native_dispatch->glesUniform1fv(
-                     program->compat_uniform_light_linear_attenuation, MGL_MAX_LIGHTS, att_linear),
-                 mgl_render_diag_native_check(
-                     ctx, "Uniform1fv:compat_uniform_light_linear_attenuation",
-                     (uint64_t)(program->compat_uniform_light_linear_attenuation),
-                     (uint64_t)program->native_name));
+                ctx->native_dispatch->glesUniform1fv(
+                     program->compat_uniform_light_linear_attenuation, MGL_MAX_LIGHTS, att_linear);
             if (program->compat_uniform_light_quadratic_attenuation >= 0 &&
                 ctx->native_dispatch->glesUniform1fv != NULL)
-                (ctx->native_dispatch->glesUniform1fv(
-                     program->compat_uniform_light_quadratic_attenuation, MGL_MAX_LIGHTS, att_quad),
-                 mgl_render_diag_native_check(
-                     ctx, "Uniform1fv:compat_uniform_light_quadratic_attenuation",
-                     (uint64_t)(program->compat_uniform_light_quadratic_attenuation),
-                     (uint64_t)program->native_name));
+                ctx->native_dispatch->glesUniform1fv(
+                     program->compat_uniform_light_quadratic_attenuation, MGL_MAX_LIGHTS, att_quad);
         }
         if (lights_dirty && program->compat_uniform_lighting_enabled >= 0 &&
             ctx->native_dispatch->glesUniform1i != NULL)
-            (ctx->native_dispatch->glesUniform1i(program->compat_uniform_lighting_enabled,
-                                                 ctx->compat.lighting_enabled ? 1 : 0),
-             mgl_render_diag_native_check(ctx, "Uniform1i:compat_uniform_lighting_enabled",
-                                          (uint64_t)(program->compat_uniform_lighting_enabled),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1i(program->compat_uniform_lighting_enabled,
+                                                 ctx->compat.lighting_enabled ? 1 : 0);
         if (program->compat_uniform_light_model_ambient >= 0 &&
             ctx->native_dispatch->glesUniform4fv != NULL)
-            (ctx->native_dispatch->glesUniform4fv(program->compat_uniform_light_model_ambient, 1,
-                                                  ctx->compat.light_model_ambient),
-             mgl_render_diag_native_check(ctx, "Uniform4fv:compat_uniform_light_model_ambient",
-                                          (uint64_t)(program->compat_uniform_light_model_ambient),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform4fv(program->compat_uniform_light_model_ambient, 1,
+                                                  ctx->compat.light_model_ambient);
         if (program->compat_uniform_light_model_local_viewer >= 0 &&
             ctx->native_dispatch->glesUniform1i != NULL)
-            (ctx->native_dispatch->glesUniform1i(program->compat_uniform_light_model_local_viewer,
-                                                 ctx->compat.light_model_local_viewer ? 1 : 0),
-             mgl_render_diag_native_check(
-                 ctx, "Uniform1i:compat_uniform_light_model_local_viewer",
-                 (uint64_t)(program->compat_uniform_light_model_local_viewer),
-                 (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1i(program->compat_uniform_light_model_local_viewer,
+                                                 ctx->compat.light_model_local_viewer ? 1 : 0);
         if (program->compat_uniform_light_model_two_side >= 0 &&
             ctx->native_dispatch->glesUniform1i != NULL)
-            (ctx->native_dispatch->glesUniform1i(program->compat_uniform_light_model_two_side,
-                                                 ctx->compat.light_model_two_side ? 1 : 0),
-             mgl_render_diag_native_check(ctx, "Uniform1i:compat_uniform_light_model_two_side",
-                                          (uint64_t)(program->compat_uniform_light_model_two_side),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1i(program->compat_uniform_light_model_two_side,
+                                                 ctx->compat.light_model_two_side ? 1 : 0);
     }
     if (material_dirty) {
         if (program->compat_uniform_material_ambient >= 0 &&
             ctx->native_dispatch->glesUniform4fv != NULL)
-            (ctx->native_dispatch->glesUniform4fv(program->compat_uniform_material_ambient, 1,
-                                                  ctx->compat.material_front.ambient),
-             mgl_render_diag_native_check(ctx, "Uniform4fv:compat_uniform_material_ambient",
-                                          (uint64_t)(program->compat_uniform_material_ambient),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform4fv(program->compat_uniform_material_ambient, 1,
+                                                  ctx->compat.material_front.ambient);
         if (program->compat_uniform_material_diffuse >= 0 &&
             ctx->native_dispatch->glesUniform4fv != NULL)
-            (ctx->native_dispatch->glesUniform4fv(program->compat_uniform_material_diffuse, 1,
-                                                  ctx->compat.material_front.diffuse),
-             mgl_render_diag_native_check(ctx, "Uniform4fv:compat_uniform_material_diffuse",
-                                          (uint64_t)(program->compat_uniform_material_diffuse),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform4fv(program->compat_uniform_material_diffuse, 1,
+                                                  ctx->compat.material_front.diffuse);
         if (program->compat_uniform_material_specular >= 0 &&
             ctx->native_dispatch->glesUniform4fv != NULL)
-            (ctx->native_dispatch->glesUniform4fv(program->compat_uniform_material_specular, 1,
-                                                  ctx->compat.material_front.specular),
-             mgl_render_diag_native_check(ctx, "Uniform4fv:compat_uniform_material_specular",
-                                          (uint64_t)(program->compat_uniform_material_specular),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform4fv(program->compat_uniform_material_specular, 1,
+                                                  ctx->compat.material_front.specular);
         if (program->compat_uniform_material_emission >= 0 &&
             ctx->native_dispatch->glesUniform4fv != NULL)
-            (ctx->native_dispatch->glesUniform4fv(program->compat_uniform_material_emission, 1,
-                                                  ctx->compat.material_front.emission),
-             mgl_render_diag_native_check(ctx, "Uniform4fv:compat_uniform_material_emission",
-                                          (uint64_t)(program->compat_uniform_material_emission),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform4fv(program->compat_uniform_material_emission, 1,
+                                                  ctx->compat.material_front.emission);
         if (program->compat_uniform_material_shininess >= 0 &&
             ctx->native_dispatch->glesUniform1f != NULL)
-            (ctx->native_dispatch->glesUniform1f(program->compat_uniform_material_shininess,
-                                                 ctx->compat.material_front.shininess),
-             mgl_render_diag_native_check(ctx, "Uniform1f:compat_uniform_material_shininess",
-                                          (uint64_t)(program->compat_uniform_material_shininess),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1f(program->compat_uniform_material_shininess,
+                                                 ctx->compat.material_front.shininess);
         if (program->compat_uniform_material_back_ambient >= 0 &&
             ctx->native_dispatch->glesUniform4fv != NULL)
-            (ctx->native_dispatch->glesUniform4fv(program->compat_uniform_material_back_ambient, 1,
-                                                  ctx->compat.material_back.ambient),
-             mgl_render_diag_native_check(ctx, "Uniform4fv:compat_uniform_material_back_ambient",
-                                          (uint64_t)(program->compat_uniform_material_back_ambient),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform4fv(program->compat_uniform_material_back_ambient, 1,
+                                                  ctx->compat.material_back.ambient);
         if (program->compat_uniform_material_back_diffuse >= 0 &&
             ctx->native_dispatch->glesUniform4fv != NULL)
-            (ctx->native_dispatch->glesUniform4fv(program->compat_uniform_material_back_diffuse, 1,
-                                                  ctx->compat.material_back.diffuse),
-             mgl_render_diag_native_check(ctx, "Uniform4fv:compat_uniform_material_back_diffuse",
-                                          (uint64_t)(program->compat_uniform_material_back_diffuse),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform4fv(program->compat_uniform_material_back_diffuse, 1,
+                                                  ctx->compat.material_back.diffuse);
         if (program->compat_uniform_material_back_specular >= 0 &&
             ctx->native_dispatch->glesUniform4fv != NULL)
-            (ctx->native_dispatch->glesUniform4fv(program->compat_uniform_material_back_specular, 1,
-                                                  ctx->compat.material_back.specular),
-             mgl_render_diag_native_check(
-                 ctx, "Uniform4fv:compat_uniform_material_back_specular",
-                 (uint64_t)(program->compat_uniform_material_back_specular),
-                 (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform4fv(program->compat_uniform_material_back_specular, 1,
+                                                  ctx->compat.material_back.specular);
         if (program->compat_uniform_material_back_emission >= 0 &&
             ctx->native_dispatch->glesUniform4fv != NULL)
-            (ctx->native_dispatch->glesUniform4fv(program->compat_uniform_material_back_emission, 1,
-                                                  ctx->compat.material_back.emission),
-             mgl_render_diag_native_check(
-                 ctx, "Uniform4fv:compat_uniform_material_back_emission",
-                 (uint64_t)(program->compat_uniform_material_back_emission),
-                 (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform4fv(program->compat_uniform_material_back_emission, 1,
+                                                  ctx->compat.material_back.emission);
         if (program->compat_uniform_material_back_shininess >= 0 &&
             ctx->native_dispatch->glesUniform1f != NULL)
-            (ctx->native_dispatch->glesUniform1f(program->compat_uniform_material_back_shininess,
-                                                 ctx->compat.material_back.shininess),
-             mgl_render_diag_native_check(
-                 ctx, "Uniform1f:compat_uniform_material_back_shininess",
-                 (uint64_t)(program->compat_uniform_material_back_shininess),
-                 (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1f(program->compat_uniform_material_back_shininess,
+                                                 ctx->compat.material_back.shininess);
         if (program->compat_uniform_color_material_enabled >= 0 &&
             ctx->native_dispatch->glesUniform1i != NULL)
-            (ctx->native_dispatch->glesUniform1i(program->compat_uniform_color_material_enabled,
-                                                 ctx->compat.color_material_enabled ? 1 : 0),
-             mgl_render_diag_native_check(
-                 ctx, "Uniform1i:compat_uniform_color_material_enabled",
-                 (uint64_t)(program->compat_uniform_color_material_enabled),
-                 (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1i(program->compat_uniform_color_material_enabled,
+                                                 ctx->compat.color_material_enabled ? 1 : 0);
         if (program->compat_uniform_color_material_mode >= 0 &&
             ctx->native_dispatch->glesUniform1i != NULL)
-            (ctx->native_dispatch->glesUniform1i(program->compat_uniform_color_material_mode,
-                                                 (GLint)ctx->compat.color_material_mode),
-             mgl_render_diag_native_check(ctx, "Uniform1i:compat_uniform_color_material_mode",
-                                          (uint64_t)(program->compat_uniform_color_material_mode),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1i(program->compat_uniform_color_material_mode,
+                                                 (GLint)ctx->compat.color_material_mode);
         if (program->compat_uniform_color_material_face >= 0 &&
             ctx->native_dispatch->glesUniform1i != NULL)
-            (ctx->native_dispatch->glesUniform1i(program->compat_uniform_color_material_face,
-                                                 (GLint)ctx->compat.color_material_face),
-             mgl_render_diag_native_check(ctx, "Uniform1i:compat_uniform_color_material_face",
-                                          (uint64_t)(program->compat_uniform_color_material_face),
-                                          (uint64_t)program->native_name));
+            ctx->native_dispatch->glesUniform1i(program->compat_uniform_color_material_face,
+                                                 (GLint)ctx->compat.color_material_face);
     }
     if (cache != NULL) {
         memcpy(&cache->compat, now, sizeof(*now));
@@ -3252,11 +3028,6 @@ static int mgl_texgen_mode_valid(unsigned coord, GLenum mode) {
 
 void glTexGenfv(GLenum coord, GLenum pname, const GLfloat *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glTexGenfv",
-                        (const struct mgl_error_arg[]){{"coord", (uint64_t)(uintptr_t)coord},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_texgen_state *tg;
     int index;
     if (ctx == NULL || params == NULL)
@@ -3339,11 +3110,6 @@ void glTexGendv(GLenum coord, GLenum pname, const GLdouble *params) {
 
 void glGetTexGenfv(GLenum coord, GLenum pname, GLfloat *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetTexGenfv",
-                        (const struct mgl_error_arg[]){{"coord", (uint64_t)(uintptr_t)coord},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_texgen_state *tg;
     int index;
     if (ctx == NULL || params == NULL)
@@ -3488,12 +3254,6 @@ void glMultiTexGendvEXT(GLenum texunit, GLenum coord, GLenum pname, const GLdoub
 
 void glGetMultiTexGenfvEXT(GLenum texunit, GLenum coord, GLenum pname, GLfloat *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetMultiTexGenfvEXT",
-                        (const struct mgl_error_arg[]){{"texunit", (uint64_t)(uintptr_t)texunit},
-                                                       {"coord", (uint64_t)(uintptr_t)coord},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        4u);
     struct mgl_texgen_state *tg;
     unsigned unit;
     int index;
@@ -3547,10 +3307,6 @@ void glGetMultiTexGendvEXT(GLenum texunit, GLenum coord, GLenum pname, GLdouble 
 
 void glClipPlane(GLenum plane, const GLdouble *equation) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glClipPlane",
-                        (const struct mgl_error_arg[]){{"plane", (uint64_t)(uintptr_t)plane},
-                                                       {"equation", (uint64_t)(uintptr_t)equation}},
-                        2u);
     GLfloat eq[4], transformed[4];
     unsigned i, index;
     if (ctx == NULL || equation == NULL)
@@ -3590,10 +3346,6 @@ void glClipPlanef(GLenum plane, const GLfloat *equation) {
 
 void glGetClipPlane(GLenum plane, GLdouble *equation) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetClipPlane",
-                        (const struct mgl_error_arg[]){{"plane", (uint64_t)(uintptr_t)plane},
-                                                       {"equation", (uint64_t)(uintptr_t)equation}},
-                        2u);
     unsigned i, index;
     if (ctx == NULL || equation == NULL)
         return;
@@ -3610,10 +3362,6 @@ void glGetClipPlane(GLenum plane, GLdouble *equation) {
 
 void glGetClipPlanef(GLenum plane, GLfloat *equation) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetClipPlanef",
-                        (const struct mgl_error_arg[]){{"plane", (uint64_t)(uintptr_t)plane},
-                                                       {"equation", (uint64_t)(uintptr_t)equation}},
-                        2u);
     unsigned i, index;
     if (ctx == NULL || equation == NULL)
         return;
@@ -3751,11 +3499,6 @@ static GLint mgl_float_to_nearest_int(GLfloat value) {
 
 void glLightfv(GLenum light, GLenum pname, const GLfloat *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glLightfv",
-                        (const struct mgl_error_arg[]){{"light", (uint64_t)(uintptr_t)light},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_light_state *l;
     unsigned count;
     int idx;
@@ -3825,10 +3568,6 @@ void glLightfv(GLenum light, GLenum pname, const GLfloat *params) {
 
 void glLightf(GLenum light, GLenum pname, GLfloat param) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glLightf",
-                        (const struct mgl_error_arg[]){{"light", (uint64_t)(uintptr_t)light},
-                                                       {"pname", (uint64_t)(uintptr_t)pname}},
-                        2u);
     if (ctx == NULL)
         return;
     if (mgl_light_record_illegal_begin(ctx, light, pname, &param, 1u))
@@ -3846,11 +3585,6 @@ void glLighti(GLenum light, GLenum pname, GLint param) {
 
 void glLightiv(GLenum light, GLenum pname, const GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glLightiv",
-                        (const struct mgl_error_arg[]){{"light", (uint64_t)(uintptr_t)light},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     GLfloat v[4];
     unsigned i, n;
     if (ctx == NULL || params == NULL)
@@ -3871,11 +3605,6 @@ void glLightiv(GLenum light, GLenum pname, const GLint *params) {
 
 void glGetLightfv(GLenum light, GLenum pname, GLfloat *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetLightfv",
-                        (const struct mgl_error_arg[]){{"light", (uint64_t)(uintptr_t)light},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_light_state *l;
     int idx;
     if (ctx == NULL || params == NULL)
@@ -3927,11 +3656,6 @@ void glGetLightfv(GLenum light, GLenum pname, GLfloat *params) {
 
 void glGetLightiv(GLenum light, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetLightiv",
-                        (const struct mgl_error_arg[]){{"light", (uint64_t)(uintptr_t)light},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     GLfloat v[4] = {0};
     unsigned i, n;
     if (ctx == NULL || params == NULL)
@@ -3954,10 +3678,6 @@ void glGetLightiv(GLenum light, GLenum pname, GLint *params) {
 
 void glLightModelfv(GLenum pname, const GLfloat *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glLightModelfv",
-                        (const struct mgl_error_arg[]){{"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        2u);
     unsigned count;
     if (ctx == NULL || params == NULL)
         return;
@@ -3989,8 +3709,6 @@ void glLightModelfv(GLenum pname, const GLfloat *params) {
 
 void glLightModelf(GLenum pname, GLfloat param) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glLightModelf",
-                        (const struct mgl_error_arg[]){{"pname", (uint64_t)(uintptr_t)pname}}, 1u);
     if (ctx == NULL)
         return;
     if (pname == GL_LIGHT_MODEL_AMBIENT) {
@@ -4062,11 +3780,6 @@ static void mgl_set_material_one(struct mgl_material_state *m, GLenum pname, con
 
 void glMaterialfv(GLenum face, GLenum pname, const GLfloat *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glMaterialfv",
-                        (const struct mgl_error_arg[]){{"face", (uint64_t)(uintptr_t)face},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     unsigned count;
     if (ctx == NULL || params == NULL)
         return;
@@ -4095,10 +3808,6 @@ void glMaterialfv(GLenum face, GLenum pname, const GLfloat *params) {
 void glMaterialf(GLenum face, GLenum pname, GLfloat param) {
     if (pname != GL_SHININESS) {
         struct mgl_context *ctx = mgl_context_current();
-        mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glMaterialf",
-                            (const struct mgl_error_arg[]){{"face", (uint64_t)(uintptr_t)face},
-                                                           {"pname", (uint64_t)(uintptr_t)pname}},
-                            2u);
         if (ctx)
             mgl_error_set(&ctx->errors, GL_INVALID_ENUM);
         return;
@@ -4112,11 +3821,6 @@ void glMateriali(GLenum face, GLenum pname, GLint param) {
 
 void glMaterialiv(GLenum face, GLenum pname, const GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glMaterialiv",
-                        (const struct mgl_error_arg[]){{"face", (uint64_t)(uintptr_t)face},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     GLfloat v[4];
     unsigned i, n;
     if (ctx == NULL || params == NULL)
@@ -4137,11 +3841,6 @@ void glMaterialiv(GLenum face, GLenum pname, const GLint *params) {
 
 void glGetMaterialfv(GLenum face, GLenum pname, GLfloat *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetMaterialfv",
-                        (const struct mgl_error_arg[]){{"face", (uint64_t)(uintptr_t)face},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     struct mgl_material_state *m;
     if (ctx == NULL || params == NULL)
         return;
@@ -4176,11 +3875,6 @@ void glGetMaterialfv(GLenum face, GLenum pname, GLfloat *params) {
 
 void glGetMaterialiv(GLenum face, GLenum pname, GLint *params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetMaterialiv",
-                        (const struct mgl_error_arg[]){{"face", (uint64_t)(uintptr_t)face},
-                                                       {"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        3u);
     GLfloat v[4] = {0};
     unsigned i, n;
     if (ctx == NULL || params == NULL)
@@ -4208,10 +3902,6 @@ void glGetMaterialiv(GLenum face, GLenum pname, GLint *params) {
 
 void glColorMaterial(GLenum face, GLenum mode) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glColorMaterial",
-                        (const struct mgl_error_arg[]){{"face", (uint64_t)(uintptr_t)face},
-                                                       {"mode", (uint64_t)(uintptr_t)mode}},
-                        2u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -4238,8 +3928,6 @@ void glColorMaterial(GLenum face, GLenum mode) {
 
 void glShadeModel(GLenum mode) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glShadeModel",
-                        (const struct mgl_error_arg[]){{"mode", (uint64_t)(uintptr_t)mode}}, 1u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {

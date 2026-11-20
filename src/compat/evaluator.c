@@ -548,11 +548,6 @@ void glEvalPoint2(GLint i, GLint j) {
 
 void glEvalMesh1(GLenum mode, GLint i1, GLint i2) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glEvalMesh1",
-                        (const struct mgl_error_arg[]){{"mode", (uint64_t)(uintptr_t)mode},
-                                                       {"i1", (uint64_t)(uintptr_t)i1},
-                                                       {"i2", (uint64_t)(uintptr_t)i2}},
-                        3u);
     GLint i;
     if (ctx == NULL)
         return;
@@ -574,13 +569,6 @@ void glEvalMesh1(GLenum mode, GLint i1, GLint i2) {
 
 void glEvalMesh2(GLenum mode, GLint i1, GLint i2, GLint j1, GLint j2) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glEvalMesh2",
-                        (const struct mgl_error_arg[]){{"mode", (uint64_t)(uintptr_t)mode},
-                                                       {"i1", (uint64_t)(uintptr_t)i1},
-                                                       {"i2", (uint64_t)(uintptr_t)i2},
-                                                       {"j1", (uint64_t)(uintptr_t)j1},
-                                                       {"j2", (uint64_t)(uintptr_t)j2}},
-                        5u);
     GLint i, j;
     if (ctx == NULL)
         return;
@@ -637,11 +625,6 @@ static const struct mgl_eval_map *get_map(struct mgl_context *ctx, GLenum target
 
 void glGetMapdv(GLenum target, GLenum query, GLdouble *v) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetMapdv",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"query", (uint64_t)(uintptr_t)query},
-                                                       {"v", (uint64_t)(uintptr_t)v}},
-                        3u);
     const struct mgl_eval_map *map;
     unsigned components;
     size_t count, i;
@@ -681,11 +664,6 @@ void glGetMapdv(GLenum target, GLenum query, GLdouble *v) {
 
 void glGetMapfv(GLenum target, GLenum query, GLfloat *v) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetMapfv",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"query", (uint64_t)(uintptr_t)query},
-                                                       {"v", (uint64_t)(uintptr_t)v}},
-                        3u);
     const struct mgl_eval_map *map;
     unsigned components;
     size_t count, i;
@@ -725,11 +703,6 @@ void glGetMapfv(GLenum target, GLenum query, GLfloat *v) {
 
 void glGetMapiv(GLenum target, GLenum query, GLint *v) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetMapiv",
-                        (const struct mgl_error_arg[]){{"target", (uint64_t)(uintptr_t)target},
-                                                       {"query", (uint64_t)(uintptr_t)query},
-                                                       {"v", (uint64_t)(uintptr_t)v}},
-                        3u);
     const struct mgl_eval_map *map;
     unsigned components;
     size_t count, i;

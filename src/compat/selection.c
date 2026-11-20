@@ -433,8 +433,6 @@ void glSelectBuffer(GLsizei size, GLuint *buffer) {
 
 GLint glRenderMode(GLenum mode) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glRenderMode",
-                        (const struct mgl_error_arg[]){{"mode", (uint64_t)(uintptr_t)mode}}, 1u);
     GLint result = 0;
     if (ctx == NULL)
         return 0;

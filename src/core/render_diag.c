@@ -1,10 +1,6 @@
 #define _POSIX_C_SOURCE 200809L
 #include "core/render_diag.h"
 #include "core/context.h"
-#include "texture/texture_store.h"
-#include "shader/shader_store.h"
-#include "objects/sampler.h"
-#include "objects/object_store.h"
 
 #include <pthread.h>
 #include <stdarg.h>
@@ -137,77 +133,10 @@ void mgl_render_diag_gl_error(struct mgl_context *ctx, const char *origin, GLenu
         return;
     report(
         ctx, "glGetError",
-        "origin=%s error=%s(0x%x) caused_by=%s program=%u draw_fbo=%u read_fbo=%u active_unit=%u",
+        "origin=%s error=%s(0x%x) program=%u draw_fbo=%u read_fbo=%u active_unit=%u",
         origin, mgl_error_name(error), (unsigned)error,
-        ctx != NULL && strcmp(origin, "interface") == 0 && ctx->errors.pending_api != NULL
-            ? ctx->errors.pending_api : "native",
         ctx != NULL ? ctx->current_program : 0u, ctx != NULL ? ctx->draw_framebuffer : 0u,
         ctx != NULL ? ctx->read_framebuffer : 0u, ctx != NULL ? ctx->compat.active_texture : 0u);
-}
-
-static atomic_uint native_check_reports[256];
-static atomic_int native_check_enabled = ATOMIC_VAR_INIT(-1);
-
-void mgl_render_diag_native_check(struct mgl_context *ctx, const char *operation, uint64_t arg0,
-                                  uint64_t arg1) {
-    GLenum error;
-    unsigned hash = 2166136261u, count, i;
-    const char *cursor;
-    int active = atomic_load_explicit(&native_check_enabled, memory_order_relaxed);
-    if (active < 0) {
-        const char *option = getenv("MGL_BACKEND_ERROR_CHECK");
-        active = option != NULL && option[0] == '1' && option[1] == '\0';
-        atomic_store_explicit(&native_check_enabled, active, memory_order_relaxed);
-    }
-    if (!active || ctx == NULL || ctx->native_dispatch == NULL ||
-        ctx->native_dispatch->glesGetError == NULL || ctx->errors.native_pending_count >= 16u)
-        return;
-    error = ctx->native_dispatch->glesGetError();
-    if (error == GL_NO_ERROR)
-        return;
-    mgl_error_native_push(&ctx->errors, error);
-    for (cursor = operation; cursor != NULL && *cursor != '\0'; ++cursor)
-        hash = (hash ^ (unsigned char)*cursor) * 16777619u;
-    hash ^= (unsigned)error;
-    count =
-        atomic_fetch_add_explicit(&native_check_reports[hash % 256u], 1u, memory_order_relaxed) +
-        1u;
-    if (count > 4u && (count & (count - 1u)) != 0u)
-        return;
-    flockfile(stderr);
-    (void)fprintf(stderr,
-                  "mGL: error: pid=%ld thread=%lx ctx=%p event=gles_reject "
-                  "operation=%s error=%s(0x%x) arg0=0x%llx arg1=0x%llx api=%s "
-                  "program=%u draw_fbo=%u read_fbo=%u active_unit=%u queued=%u",
-                  (long)getpid(), (unsigned long)pthread_self(), (void *)ctx,
-                  operation != NULL ? operation : "unknown", mgl_error_name(error), (unsigned)error,
-                  (unsigned long long)arg0, (unsigned long long)arg1,
-                  ctx->errors.diagnostic_api != NULL ? ctx->errors.diagnostic_api : "unknown",
-                  ctx->current_program, ctx->draw_framebuffer, ctx->read_framebuffer,
-                  ctx->compat.active_texture, ctx->errors.native_pending_count);
-    for (i = 0u; i < ctx->errors.diagnostic_arg_count; ++i)
-        (void)fprintf(stderr, " %s=0x%llx", ctx->errors.diagnostic_args[i].name,
-                      (unsigned long long)ctx->errors.diagnostic_args[i].value);
-    if (operation != NULL && strcmp(operation, "glesBindTexture") == 0 &&
-        (arg0 == GL_TEXTURE_2D_MULTISAMPLE || arg0 == GL_TEXTURE_2D_MULTISAMPLE_ARRAY)) {
-        unsigned unit =
-            ctx->native_active_texture_known && ctx->native_active_texture >= GL_TEXTURE0
-                ? (unsigned)(ctx->native_active_texture - GL_TEXTURE0)
-                : ctx->compat.active_texture;
-        GLuint interface = unit < mgl_programmable_texture_limit(ctx)
-                               ? (arg0 == GL_TEXTURE_2D_MULTISAMPLE
-                                      ? ctx->texture_2d_multisample_binding[unit]
-                                      : ctx->texture_2d_multisample_array_binding[unit])
-                               : 0u;
-        struct mgl_texture *texture = mgl_texture_find(ctx, interface);
-        (void)fprintf(
-            stderr,
-            " native_unit=%u interface_texture=%u interface_target=0x%x interface_native=%u", unit,
-            interface, texture != NULL ? (unsigned)texture->target : 0u,
-            texture != NULL ? texture->native_name : 0u);
-    }
-    (void)fputc('\n', stderr);
-    funlockfile(stderr);
 }
 
 static atomic_uint detail_reports[256];
@@ -241,11 +170,9 @@ void mgl_render_diag_skip(struct mgl_context *ctx, const char *operation, const 
     if (count > 4u && (count & (count - 1u)) != 0u)
         return;
     report(ctx, "lowering_skip",
-           "operation=%s reason=%s arg0=0x%llx arg1=0x%llx api=%s "
+           "operation=%s reason=%s arg0=0x%llx arg1=0x%llx "
            "program=%u draw_fbo=%u read_fbo=%u",
            operation, reason, (unsigned long long)arg0, (unsigned long long)arg1,
-           ctx != NULL && ctx->errors.diagnostic_api != NULL ? ctx->errors.diagnostic_api
-                                                             : "unknown",
            ctx != NULL ? ctx->current_program : 0u, ctx != NULL ? ctx->draw_framebuffer : 0u,
            ctx != NULL ? ctx->read_framebuffer : 0u);
 }

@@ -439,8 +439,6 @@ void glGetLightxv(GLenum light, GLenum pname, GLfixed *params) {
 
 void glLightModelx(GLenum pname, GLfixed param) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glLightModelx",
-                        (const struct mgl_error_arg[]){{"pname", (uint64_t)(uintptr_t)pname}}, 1u);
     if (ctx == NULL)
         return;
     if (pname == GL_LIGHT_MODEL_AMBIENT) {

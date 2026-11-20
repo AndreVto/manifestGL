@@ -109,10 +109,6 @@ static int conditional_mode(GLenum mode, int *wait) {
 
 void glBeginConditionalRender(GLuint id, GLenum mode) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glBeginConditionalRender",
-                        (const struct mgl_error_arg[]){{"id", (uint64_t)(uintptr_t)id},
-                                                       {"mode", (uint64_t)(uintptr_t)mode}},
-                        2u);
     GLboolean available = GL_FALSE;
     GLboolean passed = GL_TRUE;
     int wait = 0;
@@ -183,8 +179,6 @@ static int native_has_angle_provoking_vertex(const struct mgl_context *ctx) {
 
 void glProvokingVertex(GLenum mode) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glProvokingVertex",
-                        (const struct mgl_error_arg[]){{"mode", (uint64_t)(uintptr_t)mode}}, 1u);
     if (ctx == NULL)
         return;
     if (ctx->immediate.active) {
@@ -316,15 +310,6 @@ static int valid_gles_image_format(GLenum format) {
 void glBindImageTexture(GLuint unit, GLuint texture, GLint level, GLboolean layered, GLint layer,
                         GLenum access, GLenum format) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glBindImageTexture",
-                        (const struct mgl_error_arg[]){{"unit", (uint64_t)(uintptr_t)unit},
-                                                       {"texture", (uint64_t)(uintptr_t)texture},
-                                                       {"level", (uint64_t)(uintptr_t)level},
-                                                       {"layered", (uint64_t)(uintptr_t)layered},
-                                                       {"layer", (uint64_t)(uintptr_t)layer},
-                                                       {"access", (uint64_t)(uintptr_t)access},
-                                                       {"format", (uint64_t)(uintptr_t)format}},
-                        7u);
     struct mgl_texture *obj = NULL;
     GLuint native_name = 0u;
     GLenum native_format = format;

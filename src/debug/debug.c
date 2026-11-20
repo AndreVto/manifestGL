@@ -164,14 +164,6 @@ void glDebugMessageCallback(GLDEBUGPROC callback, const void *userParam) {
 void glDebugMessageControl(GLenum source, GLenum type, GLenum severity, GLsizei count,
                            const GLuint *ids, GLboolean enabled) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glDebugMessageControl",
-                        (const struct mgl_error_arg[]){{"source", (uint64_t)(uintptr_t)source},
-                                                       {"type", (uint64_t)(uintptr_t)type},
-                                                       {"severity", (uint64_t)(uintptr_t)severity},
-                                                       {"count", (uint64_t)(uintptr_t)count},
-                                                       {"ids", (uint64_t)(uintptr_t)ids},
-                                                       {"enabled", (uint64_t)(uintptr_t)enabled}},
-                        6u);
     GLsizei i;
 
     if (ctx == NULL) {
@@ -217,14 +209,6 @@ void glDebugMessageControl(GLenum source, GLenum type, GLenum severity, GLsizei 
 void glDebugMessageInsert(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
                           const GLchar *buf) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glDebugMessageInsert",
-                        (const struct mgl_error_arg[]){{"source", (uint64_t)(uintptr_t)source},
-                                                       {"type", (uint64_t)(uintptr_t)type},
-                                                       {"id", (uint64_t)(uintptr_t)id},
-                                                       {"severity", (uint64_t)(uintptr_t)severity},
-                                                       {"length", (uint64_t)(uintptr_t)length},
-                                                       {"buf", (uint64_t)(uintptr_t)buf}},
-                        6u);
 
     if (ctx == NULL) {
         return;
@@ -303,12 +287,6 @@ GLuint glGetDebugMessageLog(GLuint count, GLsizei bufSize, GLenum *sources, GLen
 
 void glPushDebugGroup(GLenum source, GLuint id, GLsizei length, const GLchar *message) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glPushDebugGroup",
-                        (const struct mgl_error_arg[]){{"source", (uint64_t)(uintptr_t)source},
-                                                       {"id", (uint64_t)(uintptr_t)id},
-                                                       {"length", (uint64_t)(uintptr_t)length},
-                                                       {"message", (uint64_t)(uintptr_t)message}},
-                        4u);
 
     if (ctx == NULL) {
         return;
@@ -524,10 +502,6 @@ void glGetObjectPtrLabel(const void *ptr, GLsizei bufSize, GLsizei *length, GLch
 
 void glGetPointerv(GLenum pname, void **params) {
     struct mgl_context *ctx = mgl_context_current();
-    mgl_error_trace_api(ctx != NULL ? &ctx->errors : NULL, "glGetPointerv",
-                        (const struct mgl_error_arg[]){{"pname", (uint64_t)(uintptr_t)pname},
-                                                       {"params", (uint64_t)(uintptr_t)params}},
-                        2u);
 
     if (ctx == NULL || params == NULL) {
         return;
